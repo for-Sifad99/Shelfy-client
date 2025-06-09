@@ -7,6 +7,7 @@ import heroBottom from '../../assets/homeBanners/heroBottom.png';
 import frame from '../../assets/homeBanners/frame.png';
 import book from '../../assets/homeBanners/book.png';
 import Slider from './Slider';
+import { Link } from 'react-router';
 
 
 const Banner = () => {
@@ -23,12 +24,14 @@ const Banner = () => {
                 <h4 className='md:text-2xl text-lg text-[var(--color-primary-orange)]'>Up to 30% Off</h4>
                 <h1 className='lg:text-6xl md:text-5xl text-3xl text-[var(--color-dark-primary)] font-semibold md:mt-1 md:mb-5 mb-3 lg:leading-15 md:leading-13'>Get Your New Book
                     With The Best Price</h1>
-                <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] bg-[var(--color-dark-secondary)] text-white rounded-full'>
-                    <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-700 group-hover:w-full z-0"></span>
-                    <span className='relative z-10 flex gap-1 items-center'>
-                        Explore Books<FaArrowRight />
-                    </span>
-                </button>
+                <Link to='all-books'>
+                    <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] bg-[var(--color-dark-secondary)] text-white rounded-full'>
+                        <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-700 group-hover:w-full z-0"></span>
+                        <span className='relative z-10 flex gap-1 items-center'>
+                            Explore Books<FaArrowRight />
+                        </span>
+                    </button>
+                </Link>
             </div>
 
             {/* Banner hero girl image with motion */}

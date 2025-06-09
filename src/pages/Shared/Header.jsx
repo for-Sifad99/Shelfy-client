@@ -4,7 +4,7 @@ import { IoIosSunny, IoIosMoon } from "react-icons/io";
 import { RiLoginCircleLine } from "react-icons/ri";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { MdNotStarted } from "react-icons/md";
-import { FaHourglassStart } from 'react-icons/fa6';
+import { FaArrowRight, FaHourglassStart, FaUser } from 'react-icons/fa6';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import {
     FaFacebookF,
@@ -22,6 +22,8 @@ import {
     FiLogIn,
 } from 'react-icons/fi';
 import useTheme from '../../hooks/ThemeContext';
+import useAuth from "../../hooks/UseAuth";
+import Profile from './Profile';
 
 const navLinks = [
     { to: '/', label: 'Home' },
@@ -31,6 +33,7 @@ const navLinks = [
 ];
 
 const Header = () => {
+    const { user } = useAuth();
     const [currentTime, setCurrentTime] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
@@ -60,18 +63,20 @@ const Header = () => {
             <div className="hidden md:flex bg-[var(--color-dark-secondary)] dark:bg-[#374151] text-[13px] xl:px-30 py-[6px] justify-center items-center gap-6">
                 <p className='flex gap-[2px] items-center'><MdNotStarted size={16} /> Hello! Welcome to our Shelfy library</p>
                 <p className='flex gap-[2px] items-center'><FaHourglassStart size={12} /> {currentTime}</p>
-                <Link
-                    to='/login'
-                    className='flex gap-[2px] items-center dark:text-[#61bfdb]'
-                >
-                    <FiLogIn /> Login
-                </Link>
-                <Link
-                    to='/register'
-                    className='flex gap-[2px] items-center dark:text-[#61bfdb]'
-                >
-                    <RiLoginCircleLine /> Register
-                </Link>
+                {
+                    user ? <p className='flex gap-[2px] items-center'><FaUser size={12} />You are currently logged in</p> : <> <Link
+                        to='/login'
+                        className='flex gap-[2px] items-center dark:text-[#61bfdb]'
+                    >
+                        <FiLogIn /> Login
+                    </Link>
+                        <Link
+                            to='/register'
+                            className='flex gap-[2px] items-center dark:text-[#61bfdb]'
+                        >
+                            <RiLoginCircleLine /> Register
+                        </Link></>
+                }
             </div>
 
             {/* Large device Navbar */}
@@ -134,10 +139,10 @@ const Header = () => {
                         <IoIosMoon className="swap-on fill-blue-200 text-[32px] sm:text-[35px] p-[5px] sm:p-[7px] border-2 border-gray-200 dark:border-gray-600 rounded-full transition duration-500" />
                     </label>
 
-                    {/* Shopping cart */}
-                    <button className="text-xs p-[8px] sm:p-[10px] border-2 border-gray-200 dark:border-gray-600 dark:text-white rounded-full hover:bg-[var(--color-primary-orange)] font-bold hover:text-white transition duration-500">
-                        <FiShoppingCart />
-                    </button>
+                    {/* Conditional Profile Info */}
+                    {
+                        user && <Profile />
+                    }
 
                     {/* small or medium devices Navbar */}
                     <button
@@ -243,29 +248,43 @@ const Header = () => {
                                 </h1>
                             </div>
 
-                            {/* Login & Register buttons */}
-                            <div className='flex flex-col gap-1 mt-2 mb-1'>
-                                <Link to='/login'>
-                                    <button
-                                        onClick={() => setIsSidebarOpen(false)}
-                                        className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
-                                        <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                                        <span className='relative z-10 flex gap-1 items-center'>
-                                            Login <FiLogIn />
-                                        </span>
-                                    </button>
-                                </Link>
-                                <Link to='/register'>
-                                    <button
-                                        onClick={() => setIsSidebarOpen(false)}
-                                        className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
-                                        <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                                        <span className='relative z-10 flex gap-1 items-center'>
-                                            Register <RiLoginCircleLine />
-                                        </span>
-                                    </button>
-                                </Link>
-                            </div>
+                            {/* Conditional Login, Register and Explore Books button */}
+                            {
+                                user ? <div className='mt-2 mb-1'>
+                                    <Link to='/all-books'>
+                                        <button
+                                            onClick={() => setIsSidebarOpen(false)}
+                                            className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
+                                            <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                                            <span className='relative z-10 flex gap-1 items-center'>
+                                                Explore Books<FaArrowRight />
+                                            </span>
+                                        </button>
+                                    </Link>
+                                </div>
+                                    : <div className='flex flex-col gap-1 mt-2 mb-1'>
+                                        <Link to='/login'>
+                                            <button
+                                                onClick={() => setIsSidebarOpen(false)}
+                                                className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
+                                                <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                                                <span className='relative z-10 flex gap-1 items-center'>
+                                                    Login <FiLogIn />
+                                                </span>
+                                            </button>
+                                        </Link>
+                                        <Link to='/register'>
+                                            <button
+                                                onClick={() => setIsSidebarOpen(false)}
+                                                className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
+                                                <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                                                <span className='relative z-10 flex gap-1 items-center'>
+                                                    Register <RiLoginCircleLine />
+                                                </span>
+                                            </button>
+                                        </Link>
+                                    </div>
+                            }
 
                             <div className="flex text-xs">
                                 {[FaFacebookF, FaTwitter, FaYoutube, FaLinkedinIn].map((Icon, index) => (
