@@ -5,13 +5,13 @@ import rightBook from '../../assets/commonBanners/rightBook.png';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { Link, useNavigate } from "react-router";
-import UseAuth from "../../hooks/UseAuth";
+import useAuth from "../../hooks/UseAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 
 const Register = () => {
-    const { createUser, createGoogleUser, signOutUser } = UseAuth();
+    const { createUser, createGoogleUser, signOutUser } = useAuth();
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState();
@@ -117,7 +117,7 @@ const Register = () => {
             <title>Join the Shelf! - Shelfy</title>
             <meta name="description" content="Make an account and start your Shelfy journey!" />
         </Helmet>
-        
+
         {/* Content */}
         <section className="dark:bg-[var(--color-bg)]">
             {/* Page Banner */}

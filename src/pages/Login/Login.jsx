@@ -4,14 +4,14 @@ import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import UseAuth from "../../hooks/UseAuth";
+import useAuth from "../../hooks/UseAuth";
 import { Link, useLocation, useNavigate, } from "react-router";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
 
 const Login = () => {
-    const { setUser, signInUser, createGoogleUser, forgotPassword } = UseAuth();
+    const { setUser, signInUser, createGoogleUser, forgotPassword } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const emailRef = useRef();
