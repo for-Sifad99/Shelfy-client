@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
+import leftBook from '../../assets/commonBanners/leftBook.png';
+import rightBook from '../../assets/commonBanners/rightBook.png';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import leftBook from '../../assets/loginBanners/leftBook.png';
-import rightBook from '../../assets/loginBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
+import { Link, useNavigate } from "react-router";
+import UseAuth from "../../hooks/UseAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import UseAuth from "../../hooks/UseAuth";
 
 
 const Register = () => {
@@ -14,7 +15,6 @@ const Register = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState();
-
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -30,13 +30,12 @@ const Register = () => {
 
         // empty validation
         if (!name || !photo || !email || !password) {
-            toast.warning("Please fill in all fields! 🛑");
+            toast.warning("Please fill in all fields!");
             return;
         } else if (!checkbox) {
-            toast.warning("Please Accept terms! 🛑");
+            toast.warning("Please Accept terms!");
             return;
         };
-
 
         // password validation
         if (password.length < 6) return setError("Password must be at least 6 characters!");
@@ -77,7 +76,6 @@ const Register = () => {
         };
     };
 
-
     const handleGoogleUser = async (e) => {
         e.preventDefault();
 
@@ -107,13 +105,20 @@ const Register = () => {
                 navigate('/login')
             }, 3000);
         }
+        // Error handling :
         catch (err) {
             toast.error(`Registration failed: ${err.message}`);
         };
     };
 
-
-    return (
+    return <>
+        {/* Helmet */}
+        <Helmet>
+            <title>Join the Shelf! - Shelfy</title>
+            <meta name="description" content="Make an account and start your Shelfy journey!" />
+        </Helmet>
+        
+        {/* Content */}
         <section className="dark:bg-[var(--color-bg)]">
             {/* Page Banner */}
             <div className="flex justify-between items-center bg-[#e6eff2] dark:bg-[#19343d] sm:py-6 py-12">
@@ -218,7 +223,7 @@ const Register = () => {
                             {/* Error showing */}
                             {
                                 error &&
-                                <p className="text-orange-500 dark:text-orange-400 lg:text-sm md:text-xs sm:text-sm text-xs">⚠️ {error}</p>
+                                <p className="text-orange-500 dark:text-orange-300 lg:text-sm md:text-xs sm:text-sm text-xs">⚠️ {error}</p>
                             }
 
                             {/* Terms */}
@@ -252,13 +257,13 @@ const Register = () => {
                                 <span>Continue With Google</span>
                             </button>
 
-                         
+
                         </form>
                     </div>
                 </div>
             </div>
         </section>
-    );
+    </>
 };
 
 export default Register;
