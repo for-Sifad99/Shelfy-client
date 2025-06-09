@@ -116,9 +116,9 @@ const Header = () => {
                         <input
                             type="text"
                             placeholder="Author"
-                            className="px-3 py-[11px] outline-none w-40 bg-white dark:bg-[#333a45] "
+                            className="px-3 py-[11px] outline-none w-40 bg-white dark:bg-[#333a45]"
                         />
-                        <button className="px-3 py-[11px] transition rounded-r-full bg-white dark:bg-[#333a45] ">
+                        <button className="px-3 py-[11px] transition rounded-r-full bg-white dark:bg-[#333a45]">
                             <FiSearch size={14} />
                         </button>
                     </div>
@@ -230,31 +230,35 @@ const Header = () => {
                             <h1 className='text-base text-[#012E4A] font-bold mb-1'>Contact Info</h1>
                             <div className='space-y-[6px] text-xs text-gray-500'>
                                 <h1 className=' flex items-center'>
-                                    <IoLocationOutline className='mr-1'/> Warless Bazar, Chandpur, Bangladesh
+                                    <IoLocationOutline className='mr-1' /> Warless Bazar, Chandpur, Bangladesh
                                 </h1>
                                 <h1 className='flex items-center'>
-                                    <IoMailOutline className='mr-1'/> sifayed99@gmail.com
+                                    <IoMailOutline className='mr-1' /> sifayed99@gmail.com
                                 </h1>
                                 <h1 className=' flex items-center'>
                                     <IoTimeOutline className='mr-1' /> Mod-friday, 09am -05pm
                                 </h1>
                                 <h1 className=' flex items-center'>
-                                    <IoCallOutline className='mr-1'/> 8801 9978 5648
+                                    <IoCallOutline className='mr-1' /> 8801 9978 5648
                                 </h1>
                             </div>
 
                             {/* Login & Register buttons */}
                             <div className='flex flex-col gap-1 mt-2 mb-1'>
                                 <Link to='/login'>
-                                    <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
+                                    <button
+                                        onClick={() => setIsSidebarOpen(false)}
+                                        className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
                                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                         <span className='relative z-10 flex gap-1 items-center'>
                                             Login <FiLogIn />
                                         </span>
                                     </button>
                                 </Link>
-                                <Link to='/login'>
-                                    <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
+                                <Link to='/register'>
+                                    <button
+                                        onClick={() => setIsSidebarOpen(false)}
+                                        className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
                                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                         <span className='relative z-10 flex gap-1 items-center'>
                                             Register <RiLoginCircleLine />

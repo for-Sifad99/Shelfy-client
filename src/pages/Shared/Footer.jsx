@@ -15,8 +15,8 @@ import { Link } from "react-router";
 
 const Footer = () => {
     return (
-        <footer className="bg-[#002D44] dark:bg-[var(--color-bg)] text-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-6 xl:px-30 pt-10">
+        <footer className="bg-[#002D44] dark:bg-[var(--color-bg)] text-white dark:border-t dark:border-[#535353]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-6 xl:px-30 pt-12">
                 <div className="grid xl:gap-6 md:gap-0 gap-10 md:grid-cols-5 text-sm md:text-base">
                     {/* Brand Info */}
                     <div className="md:col-span-2 md:pr-6">
@@ -79,12 +79,12 @@ const Footer = () => {
                             <div className="h-[2px] md:w-2/16 sm:w-2/20 w-2/30 bg-[var(--color-light-accent)]"></div>
                         </div>
                         <p className="md:text-xs sm:text-lg text-sm opacity-70 mb-3">Sign up with your email address to get the latest updates.</p>
-                        <div className="">
+                        <div>
                             <div className="flex flex-col sm:flex-row gap-3 md:w-full sm:w-fit w-full border border-slate-400 dark:border-gray-600 md:p-1 p-[6px] lg:text-sm md:text-xs sm:text-lg text-sm rounded">
                                 <input
                                     type="email"
-                                    placeholder="Enter Email Address"
-                                    className="p-2 rounded text-blue-100 md:w-full  focus:outline-none"
+                                    placeholder="Your Email"
+                                    className="p-2 rounded text-white md:w-full  focus:outline-none"
                                 />
                                 <button className='relative overflow-hidden group lg:text-sm md:text-xs sm:text-lg text-sm font-semibold px-[14px] py-[10px] bg-[var(--color-dark-secondary)] text-white rounded'>
                                     <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-700 group-hover:w-full z-0"></span>
@@ -96,8 +96,8 @@ const Footer = () => {
                 </div>
             </div>
 
-            {/* Bottom Footer */}
-            <div className="mx-auto px-4 sm:px-6 md:px-12 lg:px-6 xl:px-38 mt-10 py-3 bg-[var(--color-dark-secondary)] dark:bg-[#374151] flex flex-col md:flex-row justify-between items-center text-xs sm:gap-4 gap-2">
+
+            <div className="mx-auto mt-6 px-4 sm:px-6 md:px-12 lg:px-6 xl:px-38 py-3 bg-[var(--color-dark-secondary)] dark:bg-[var(--color-bg)] flex flex-col md:flex-row justify-between items-center text-xs sm:gap-4 gap-2">
                 <p>© All Copyrights 2025 | Bookie</p>
                 <div className="flex gap-3">
                     <img src={visa}
