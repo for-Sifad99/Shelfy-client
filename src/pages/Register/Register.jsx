@@ -114,7 +114,7 @@ const Register = () => {
     return <>
         {/* Helmet */}
         <Helmet>
-            <title>Join the Shelf! - Shelfy</title>
+            <title>Join the Shelf - Shelfy</title>
             <meta name="description" content="Make an account and start your Shelfy journey!" />
         </Helmet>
 
@@ -137,7 +137,7 @@ const Register = () => {
                     <div className="flex items-center gap-1 text-[10px] sm:text-xs md:text-sm font-normal text-gray-600 dark:text-slate-400 sm:mt-1">
                         <Link to="/">Home</Link>
                         <IoIosArrowForward />
-                        <Link to="/register">Sign up</Link>
+                        <span className='text-orange-500 dark:text-orange-300'>Sign up</span>
                     </div>
                 </div>
 
@@ -163,7 +163,7 @@ const Register = () => {
                             your favorite books across the web.
                         </p>
                         <div className="flex text-sm gap-1 mt-1  font-bold text-black">
-                            <span>TO EXPLORE FIRST </span><Link to="/login" className="underline"> LOGIN HERE</Link>
+                            <span>TO EXPLORE FIRST </span><Link to="/login" className="underline text-orange-300"> LOGIN HERE</Link>
                         </div>
                     </div>
 

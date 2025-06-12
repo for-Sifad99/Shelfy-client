@@ -15,7 +15,7 @@ const Profile = () => {
     const handleSignOut = async () => {
         Swal.fire({
             title: "Are you sure?",
-            text: "You want to log out!",
+            text: "You want to logout!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",

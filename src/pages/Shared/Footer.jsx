@@ -98,7 +98,7 @@ const Footer = () => {
 
 
             <div className="mx-auto mt-6 px-4 sm:px-6 md:px-12 lg:px-6 xl:px-38 py-3 bg-[var(--color-dark-secondary)] dark:bg-[var(--color-bg)] flex flex-col md:flex-row justify-between items-center text-xs sm:gap-4 gap-2">
-                <p>© All Copyrights 2025 | Bookie</p>
+                <p>© All Copyrights 2025 | Shelfy</p>
                 <div className="flex gap-3">
                     <img src={visa}
                         className="w-14 h-8 py-2 px-3 rounded border hover:border-2  border-slate-400 dark:hover:border-1 dark:hover:border-gray-400 dark:border-gray-500 transition duration-300 shadow-md"

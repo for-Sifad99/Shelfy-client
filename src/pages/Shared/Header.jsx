@@ -17,7 +17,6 @@ import {
 } from "react-icons/io5";
 import {
     FiSearch,
-    FiShoppingCart,
     FiX,
     FiLogIn,
 } from 'react-icons/fi';
@@ -80,7 +79,7 @@ const Header = () => {
             </div>
 
             {/* Large device Navbar */}
-            <div className='op-0 flex justify-between items-center dark:text-[var(--color-light-primary)] text-[var(--color-bg)] sm:py-4 py-3 px-4 md:px-10 lg:px-4 xl:px-36 '>
+            <div className='op-0 flex justify-between items-center dark:text-[var(--color-light-primary)] text-[var(--color-bg)] sm:py-4 py-3 px-4 md:px-10 lg:px-4 xl:px-36'>
                 {/* Logo */}
                 <Link to="/" className="flex items-center text-xl font-bold">
                     <img src="/logo.png" alt="Shelfy" className="sm:w-12 sm:h-12 w-8 h-8 sm:mr-0 mr-1" />
@@ -96,7 +95,7 @@ const Header = () => {
                             <NavLink
                                 to={to}
                                 className={({ isActive }) =>
-                                    `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive ? 'text-[var(--color-primary-orange)] dark:text-orange-300 font-bold' : ''}`
+                                    `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive ? 'text-[var(--color-primary-orange)] dark:text-orange-300' : ''}`
                                 }
                             >
                                 {label}
@@ -212,7 +211,7 @@ const Header = () => {
                                     to={to}
                                     onClick={() => setIsSidebarOpen(false)}
                                     className={({ isActive }) =>
-                                        `flex items-center justify-between gap-1 cursor-pointer select-none hover:text-[var(--color-primary-orange)] ${isActive ? 'text-[var(--color-primary-orange)] font-bold' : ''}`
+                                        `flex items-center justify-between gap-1 cursor-pointer select-none hover:text-[var(--color-primary-orange)] ${isActive ? 'text-[var(--color-primary-orange)]' : ''}`
                                     }
                                 >
                                     <p>{label}</p>

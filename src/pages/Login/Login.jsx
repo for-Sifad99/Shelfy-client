@@ -170,7 +170,7 @@ const Login = () => {
                     <div className="flex items-center gap-1 text-[10px] sm:text-xs md:text-sm font-normal text-gray-600 dark:text-slate-400 sm:mt-1">
                         <Link to="/">Home</Link>
                         <IoIosArrowForward />
-                        <Link to="/login">Sign In</Link>
+                        <span className='text-orange-500 dark:text-orange-300'>Sign In</span>
                     </div>
                 </div>
 
@@ -195,7 +195,7 @@ const Login = () => {
                             Access your bookshelf anytime, anywhere. Pick up right where you left off and keep reading!
                         </p>
                         <div className="flex text-sm gap-1 mt-1  font-bold text-black">
-                            <span>TO EXPLORE ACCOUNT </span><Link to="/register" className="underline"> CREATE HERE</Link>
+                            <span>TO EXPLORE ACCOUNT </span><Link to="/register" className="underline text-orange-300"> CREATE HERE</Link>
                         </div>
                     </div>
 
