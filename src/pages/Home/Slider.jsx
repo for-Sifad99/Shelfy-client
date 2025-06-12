@@ -16,14 +16,6 @@ const Slider = () => {
             "src": "https://i.postimg.cc/Kv36GQk7/3.jpg"
         },
         {
-            "alt": "Banner-4 Picture",
-            "src": "https://i.postimg.cc/B6gqCpcP/4.png"
-        },
-        {
-            "alt": "Banner-6 Picture",
-            "src": "https://i.postimg.cc/MZV0zQZM/3.jpg"
-        },
-        {
             "alt": "Banner-5 Picture",
             "src": "https://i.postimg.cc/zX4hbc1s/light-yellow-background-mv77cxaxfh2k9cwd.jpg"
         }

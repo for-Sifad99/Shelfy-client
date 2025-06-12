@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import Banner from './Banner';
+import Categories from './Categories';
 
 
 const Home = () => {
@@ -15,6 +16,9 @@ const Home = () => {
 
             {/* Content */}
             <Banner />
+
+            {/* Categories */}
+            <Categories />
         </>
     );
 };

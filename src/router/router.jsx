@@ -8,6 +8,7 @@ import Home from '../pages/Home/Home';
 import AllBooks from '../pages/AllBooks/AllBooks';
 import BorrowedBooks from '../pages/BorrowedBooks/BorrowedBooks';
 import AddBooks from '../pages/AddBooks/AddBooks';
+import CategoryBooks from '../pages/CategoryBooks/CategoryBooks';
 import UpdateBook from '../pages/UpdateBook/UpdateBook';
 import Register from '../pages/Register/Register';
 import Login from '../pages/Login/Login';
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
             {
                 path: '/borrowed-Books',
                 element: <PrivetRouter><BorrowedBooks /></PrivetRouter>
+            },
+            {
+                path: '/category-Books/:category',
+                element: <PrivetRouter><CategoryBooks /></PrivetRouter>
             },
             {
                 path: '/update-Book/:id',
