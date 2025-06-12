@@ -8,6 +8,7 @@ import Home from '../pages/Home/Home';
 import AllBooks from '../pages/AllBooks/AllBooks';
 import BorrowedBooks from '../pages/BorrowedBooks/BorrowedBooks';
 import AddBooks from '../pages/AddBooks/AddBooks';
+import UpdateBook from '../pages/UpdateBook/UpdateBook';
 import Register from '../pages/Register/Register';
 import Login from '../pages/Login/Login';
 import ErrorPage from '../pages/ErrorPage/ErrorPage';
@@ -27,12 +28,16 @@ const router = createBrowserRouter([
                 element: <PrivetRouter><AllBooks /></PrivetRouter>
             },
             {
+                path: '/add-Books',
+                element: <PrivetRouter><AddBooks /></PrivetRouter>
+            },
+            {
                 path: '/borrowed-Books',
                 element: <PrivetRouter><BorrowedBooks /></PrivetRouter>
             },
             {
-                path: '/add-Books',
-                element: <PrivetRouter><AddBooks /></PrivetRouter>
+                path: '/update-Book/:id',
+                element: <PrivetRouter><UpdateBook /></PrivetRouter>
             },
             {
                 path: '/register',

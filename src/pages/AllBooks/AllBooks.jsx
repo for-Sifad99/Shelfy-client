@@ -162,7 +162,7 @@ const AllBooks = () => {
                                         <h1 className='dark:text-[#dad5d5] text-xs font-extrabold dark:font-semibold mb-2'>
                                             {book.bookTitle}
                                         </h1>
-                                        <Link to='/update-book'>
+                                        <Link to={`/update-book/${book._id}`}>
                                             <button
                                                 className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                 <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
@@ -213,7 +213,7 @@ const AllBooks = () => {
                                                 <h3 className='bg-gray-200 dark:bg-gray-300 dark:text-black dark:border-[#374151] p-1 rounded'>{book.rating}</h3>
                                             </td>
                                             <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2">
-                                                <Link to='/update-book'>
+                                                <Link to={`/update-book/${book._id}`}>
                                                     <button
                                                         className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
