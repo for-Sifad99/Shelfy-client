@@ -10,6 +10,7 @@ import { LuTableProperties, LuTableOfContents } from "react-icons/lu";
 import { MdEdit } from 'react-icons/md';
 import { Link } from 'react-router';
 import Loader from '../Shared/Loader';
+import Pagination from '../Shared/Pagination';
 import axios from 'axios';
 
 
@@ -18,21 +19,29 @@ const AllBooks = () => {
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
     const [view, setView] = useState(() => localStorage.getItem('bookView') || 'card');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const itemsPerPage = 10;
 
-    // Fetch all books from the server by axios in useEffect
+    // Fetch paginated books based on category & page
     useEffect(() => {
-        const fetchAllBooks = async () => {
+        const fetchCategoryBooks = async () => {
+            setLoading(true);
             try {
-                const res = await axios.get('http://localhost:3000/allbooks');
-                setBooks(res.data);
-            } catch (err) {
-                console.error("Fetch error:", err);
+                const res = await axios.get(
+                    `http://localhost:3000/allBooks?page=${currentPage}&limit=${itemsPerPage}`
+                );
+                setBooks(res.data.books);
+                setTotalPages(res.data.totalPages);
+            } catch (error) {
+                console.error("Error fetching category books:", error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchAllBooks();
-    }, []);
+
+        fetchCategoryBooks();
+    }, [currentPage]);
 
     // filter books based on availability
     const filteredBooks = books.filter(book => {
@@ -231,6 +240,14 @@ const AllBooks = () => {
                     )}
                 </>
             }
+
+            <div className='text-center mt-6 text-xl'>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    setCurrentPage={setCurrentPage}
+                />
+            </div>
         </div>
     </>
 };
