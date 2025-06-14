@@ -19,7 +19,7 @@ const CategoryBooks = () => {
     const [books, setBooks] = useState([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
-    const [view, setView] = useState(() => localStorage.getItem('bookView') || 'card');
+    const [view, setView] = useState(() => localStorage.getItem('bookCategoryView') || 'card');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const itemsPerPage = 10;
@@ -57,16 +57,20 @@ const CategoryBooks = () => {
 
     // Handle view change and save to localStorage
     const handleViewChange = (viewType) => {
-        localStorage.setItem('bookView', viewType);
+        localStorage.setItem('bookCategoryView', viewType);
         setView(viewType);
     };
 
     return <>
         {/* Helmet */}
         <Helmet>
-            <title>All the Books - Shelfy</title>
-            <meta name="description" content="Scroll through ‘em all — find your next fav read on Shelfy!" />
+            <title>{category} Picks - Shelfy</title>
+            <meta
+                name="description"
+                content={`Explore top ${category} books picked just for you. Dive into your favorite genre now on Shelfy!`}
+            />
         </Helmet>
+
 
 
         {/* Page Banner */}
