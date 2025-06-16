@@ -6,6 +6,7 @@ import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
 import { FaUser } from 'react-icons/fa';
 import { LuTableProperties, LuTableOfContents } from "react-icons/lu";
+import { TbListDetails } from "react-icons/tb";
 import { Rating, Star } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
 import Loader from '../Shared/Loader';
@@ -26,7 +27,6 @@ const CategoryBooks = () => {
     // Fetch paginated books based on category & page
     useEffect(() => {
         const fetchCategoryBooks = async () => {
-            setLoading(true);
             try {
                 const res = await axios.get(
                     `http://localhost:3000/allBooks?category=${category}&page=${currentPage}&limit=${itemsPerPage}`
@@ -178,8 +178,8 @@ const CategoryBooks = () => {
                                             <button
                                                 className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                 <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                                                <span className='relative z-10 '>
-                                                    Details
+                                                <span className='relative z-10 flex gap-1 items-center'>
+                                                    <TbListDetails /> Details
                                                 </span>
                                             </button>
                                         </Link>
@@ -231,8 +231,8 @@ const CategoryBooks = () => {
                                                     <button
                                                         className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                                                        <span className='relative z-10'>
-                                                            Details
+                                                        <span className='relative z-10 flex gap-1 items-center'>
+                                                            <TbListDetails /> Details
                                                         </span>
                                                     </button>
                                                 </Link>

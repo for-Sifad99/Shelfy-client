@@ -2,6 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import Banner from './Banner';
 import Categories from './Categories';
+import HighRatingBooks from './HighRating';
 
 
 const Home = () => {
@@ -19,6 +20,9 @@ const Home = () => {
 
             {/* Categories */}
             <Categories />
+
+            {/* High Rating Books Collection */}
+            <HighRatingBooks />
         </>
     );
 };

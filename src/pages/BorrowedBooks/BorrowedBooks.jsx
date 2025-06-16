@@ -5,14 +5,20 @@ import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
 import { FaUser } from 'react-icons/fa';
+import { IoMdReturnRight } from "react-icons/io";
 import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import axios from 'axios';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import Loader from '../Shared/Loader';
+import { patchBook } from '../../api/bookApis';
 
 
 const BorrowedBooks = () => {
     const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
     const [borrowedBooks, setBorrowedBooks] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchBorrowedBooks = async () => {
@@ -21,7 +27,9 @@ const BorrowedBooks = () => {
                 setBorrowedBooks(BorrowedBooks.data);
             } catch (error) {
                 console.error("Error fetching borrowed books:", error);
-            };
+            } finally {
+                setLoading(false);
+            }
         };
 
         if (user?.email) {
@@ -31,7 +39,7 @@ const BorrowedBooks = () => {
 
     const handleReturn = async (borrowedId, bookId, currentQuantity) => {
         try {
-            await axios.patch(`http://localhost:3000/updateBook/${bookId}`, {
+            await patchBook(axiosSecure, bookId, {
                 quantity: currentQuantity + 1
             });
             await axios.delete(`http://localhost:3000/deleteBorrowedBook/${borrowedId}`);
@@ -62,6 +70,9 @@ const BorrowedBooks = () => {
         };
     };
 
+    if (loading) {
+        return <Loader />
+    };
 
     return <>
         {/* Helmet */}
@@ -104,7 +115,7 @@ const BorrowedBooks = () => {
             {borrowedBooks.length === 0 ?
                 <div className='flex flex-col justify-center items-center gap-2 lg:gap-3'>
                     <p className='text-sm sm:text-2xl lg:text-3xl font-semibold text-orange-500 dark:text-orange-400'>You don't Borrowed any book yet!</p>
-                    <Link>
+                    <Link to='/'>
                         <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-white g bg-[var(--color-dark-secondary)]  rounded-full transition-all duration-300'>
                             <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                             <span className='relative z-10'>
@@ -146,8 +157,8 @@ const BorrowedBooks = () => {
                                     type='button'
                                     className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                     <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                                    <span className='relative z-10'>
-                                        Return
+                                    <span className='relative z-10 flex gap-1 items-center'>
+                                        <IoMdReturnRight className='text-base' /> Return
                                     </span>
                                 </button>
                             </div>

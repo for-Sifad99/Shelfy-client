@@ -8,7 +8,7 @@ import { Rating, Star } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
 import { FaUser } from 'react-icons/fa';
 import { LuTableProperties, LuTableOfContents } from "react-icons/lu";
-import { MdEdit } from 'react-icons/md';
+import { MdTipsAndUpdates } from "react-icons/md";
 import Loader from '../Shared/Loader';
 import Pagination from '../Shared/Pagination';
 import axios from 'axios';
@@ -27,7 +27,6 @@ const AllBooks = () => {
     useEffect(() => {
         const fetchCategoryBooks = async () => {
             try {
-                setLoading(true);
                 const res = await axios.get(`http://localhost:3000/allBooks?page=${currentPage}&limit=${itemsPerPage}`);
                 setBooks(res.data.books);
                 setTotalPages(res.data.totalPages);
@@ -133,7 +132,7 @@ const AllBooks = () => {
             {filteredBooks.length == 0 ?
                 <div className='flex flex-col justify-center items-center gap-2 sm:gap-3 md:mt-10 sm:mt-8 mt-6'>
                     <p className='text-sm sm:text-2xl lg:text-3xl font-semibold text-orange-500 dark:text-orange-400'>There are no collect in this option!</p>
-                    <Link>
+                    <Link to='/'>
                         <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-white g bg-[var(--color-dark-secondary)]  rounded-full transition-all duration-300'>
                             <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                             <span className='relative z-10'>
@@ -185,7 +184,7 @@ const AllBooks = () => {
                                                         className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                                         <span className='relative z-10 flex gap-1 items-center'>
-                                                            Update <MdEdit size={12} />
+                                                            <MdTipsAndUpdates /> Update
                                                         </span>
                                                     </button>
                                                 </Link>
@@ -236,7 +235,7 @@ const AllBooks = () => {
                                                                 className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                                 <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                                                 <span className='relative z-10 flex gap-1 items-center'>
-                                                                    Update <MdEdit size={12} />
+                                                                    <MdTipsAndUpdates /> Update
                                                                 </span>
                                                             </button>
                                                         </Link>

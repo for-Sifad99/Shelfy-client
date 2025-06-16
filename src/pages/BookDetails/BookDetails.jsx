@@ -6,16 +6,20 @@ import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
 import { MdOutlineProductionQuantityLimits, MdOutlineCategory } from "react-icons/md";
 import { FaGripLinesVertical } from "react-icons/fa";
+import { IoCart } from "react-icons/io5";
 import { Rating, Star } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import {patchBook} from '../../api/bookApis';
 
 
 const BookDetails = () => {
     const { id } = useParams();
+    const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
     const [book, setBook] = useState({});
     const [showModal, setShowModal] = useState(false);
@@ -53,7 +57,7 @@ const BookDetails = () => {
             await axios.post('http://localhost:3000/addBorrowedBookInfo', borrowedData);
 
             // 2. Quantity decrease in DB
-            await axios.patch(`http://localhost:3000/updateBook/${id}`, {
+            await patchBook(axiosSecure, id, {
                 quantity: book.quantity - 1,
             });
 
@@ -157,7 +161,7 @@ const BookDetails = () => {
                         onClick={() => setShowModal(true)}
                         className='relative overflow-hidden group sm:text-sm text-xs font-semibold px-6 py-[8px] w-[160px] flex justify-center text-[var(--color-dark-secondary)] hover:text-white  bg-[#eeebfd] rounded-full transition-all duration-300 mt-2 disabled:opacity-50 disabled:cursor-not-allowed'>
                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                        <span className='relative z-10'>Borrow</span>
+                        <span className='relative z-10 flex gap-1 items-center'><IoCart className="text-base"/>Borrow</span>
                     </button>
 
                     {/* Book Content */}
