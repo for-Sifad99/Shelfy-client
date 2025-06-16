@@ -1,21 +1,43 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
-import useAuth from '../../hooks/UseAuth';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import Swal from 'sweetalert2';
-import { Link } from 'react-router';
+import useAuth from '../../hooks/useAuth';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { postBooks } from '../../api/bookApis';
 
 
 const AddBooks = () => {
     const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!user?.accessToken) {
+            // Sweet Alert :
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "error",
+                title: "User not logged in!"
+            });
+            return;
+        };
 
         // Get form data
         const form = e.target;
@@ -51,8 +73,8 @@ const AddBooks = () => {
 
         // Send data to the DB
         try {
-            const res = await axios.post('http://localhost:3000/addBooks', bookData);
-            if (res.data.insertedId) {
+            const res = await postBooks(axiosSecure, bookData);
+            if (res.insertedId) {
                 // Sweet Alert :
                 const Toast = Swal.mixin({
                     toast: true,

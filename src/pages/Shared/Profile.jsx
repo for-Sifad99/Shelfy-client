@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import useAuth from '../../hooks/UseAuth';
-import Swal from "sweetalert2";
 import { MdLogout } from "react-icons/md";
+import Swal from "sweetalert2";
+import useAuth from '../../hooks/UseAuth';
+
 
 const Profile = () => {
     const { signOutUser, user } = useAuth();
@@ -13,6 +14,8 @@ const Profile = () => {
     const profileRef = useRef(null);
 
     const handleSignOut = async () => {
+
+        // Sweet Alert:
         Swal.fire({
             title: "Are you sure?",
             text: "You want to logout!",
@@ -30,7 +33,7 @@ const Profile = () => {
                     text: "You are successfully logged out.",
                     icon: "success"
                 });
-            }
+            };
         });
     };
 

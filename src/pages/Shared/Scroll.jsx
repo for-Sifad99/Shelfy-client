@@ -23,18 +23,15 @@ const Scroll = () => {
         }, 300); 
     };
 
-    return (
-        <>
+    return  <>
             {
                 isVisible &&
                 <FaAngleUp
                     onClick={handleScrollToTop}
-                    className="text-4xl fixed lg:bottom-12 bottom-9 md:right-10 right-3 bg-[#036280] text-white rounded-xl  
-                    hover:bg-[#034e80] transition-all duration-300 hover:-translate-y-2 p-[10px] shadow-lg cursor-pointer"
+                    className="text-4xl fixed lg:bottom-12 bottom-9 md:right-10 right-3 bg-[#036280] text-white rounded-xl z-50 hover:bg-[#034e80] transition-all duration-300 hover:-translate-y-2 p-[10px] shadow-lg cursor-pointer"
                 />
             }
         </>
-    );
 };
 
 export default Scroll;

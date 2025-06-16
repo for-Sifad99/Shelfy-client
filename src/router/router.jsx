@@ -31,7 +31,8 @@ const router = createBrowserRouter([
             },
             {
                 path: '/add-Books',
-                element: <PrivetRouter><AddBooks /></PrivetRouter>
+
+                element: <PrivetRouter> <AddBooks /></PrivetRouter>
             },
             {
                 path: '/borrowed-Books',
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/category-Books/:category',
-                element: <PrivetRouter><CategoryBooks /></PrivetRouter>
+                element: <CategoryBooks />
             },
             {
                 path: '/book-details/:id',

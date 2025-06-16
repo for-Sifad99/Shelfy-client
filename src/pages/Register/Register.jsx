@@ -1,14 +1,13 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
 import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
-import { Link, useNavigate } from "react-router";
-import useAuth from "../../hooks/UseAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-
+import useAuth from "../../hooks/UseAuth";
 
 const Register = () => {
     const { createUser, createGoogleUser, signOutUser } = useAuth();
@@ -82,7 +81,6 @@ const Register = () => {
         //? Create User with Google:
         try {
             await createGoogleUser();
-
             // Sweet Alert :
             const Toast = Swal.mixin({
                 toast: true,

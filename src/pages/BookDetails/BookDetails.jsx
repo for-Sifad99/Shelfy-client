@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Helmet } from 'react-helmet-async';
+import React, { useEffect, useState } from "react"
 import { Link, useParams } from "react-router";
-import { Rating, Star } from '@smastrom/react-rating';
-import '@smastrom/react-rating/style.css';
-import axios from "axios";
+import { Helmet } from 'react-helmet-async';
 import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
 import { MdOutlineProductionQuantityLimits, MdOutlineCategory } from "react-icons/md";
 import { FaGripLinesVertical } from "react-icons/fa";
-import useAuth from "../../hooks/UseAuth"; // Assuming you have a custom hook for authentication
+import { Rating, Star } from '@smastrom/react-rating';
+import '@smastrom/react-rating/style.css';
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import axios from "axios";
+import useAuth from "../../hooks/useAuth";
+
 
 const BookDetails = () => {
     const { id } = useParams();
@@ -57,7 +58,7 @@ const BookDetails = () => {
             });
 
             // 3. Update local state
-            setBook(prev => ({ ...prev, quantity: quantity - 1}));
+            setBook(prev => ({ ...prev, quantity: quantity - 1 }));
 
             // Sweet Alert :
             const Toast = Swal.mixin({
@@ -77,14 +78,14 @@ const BookDetails = () => {
             });
 
         } catch (err) {
-            if (err.response?.status === 400) {
-                toast.error("You already borrowed this book!");
-            } else if (err.response?.status === 403) {
+            if (err.response?.status === 403) {
                 toast.error("You can't borrow more than 3 books!");
+            } else if (err.response?.status === 400) {
+                toast.error("You already borrowed this book!");
             } else {
                 toast.error("Something went wrong!");
                 console.error(err);
-            }
+            };
         };
     };
 

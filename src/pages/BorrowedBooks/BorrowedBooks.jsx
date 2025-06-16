@@ -1,34 +1,33 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router';
+import { Helmet } from 'react-helmet-async';
 import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
 import { FaUser } from 'react-icons/fa';
-import useAuth from '../../hooks/UseAuth';
-import axios from 'axios';
-import '@smastrom/react-rating/style.css';
-import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router';
 import Swal from 'sweetalert2';
+import useAuth from '../../hooks/useAuth';
+import axios from 'axios';
+
 
 const BorrowedBooks = () => {
     const { user } = useAuth();
     const [borrowedBooks, setBorrowedBooks] = useState([]);
 
-
     useEffect(() => {
         const fetchBorrowedBooks = async () => {
             try {
-                const BorrowedBooks = await axios.get(`http://localhost:3000/borrowedBooks/${user.email}`);
+                const BorrowedBooks = await axios.get(`http://localhost:3000/borrowedBooks/${user.email}`)
                 setBorrowedBooks(BorrowedBooks.data);
             } catch (error) {
                 console.error("Error fetching borrowed books:", error);
             };
         };
 
-        if (user.email) {
+        if (user?.email) {
             fetchBorrowedBooks();
         };
-    }, [user.email, borrowedBooks]);
+    }, [user.email]);
 
     const handleReturn = async (borrowedId, bookId, currentQuantity) => {
         try {
@@ -60,7 +59,7 @@ const BorrowedBooks = () => {
             );
         } catch (error) {
             console.error("Error returning the book:", error);
-        }
+        };
     };
 
 
@@ -102,8 +101,18 @@ const BorrowedBooks = () => {
 
         {/* Main Content */}
         <div className="sm:py-16 py-8 px-4 md:px-10 lg:px-4 xl:px-36">
-            <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:px-0 sm:px-16">
+            {borrowedBooks.length === 0 ?
+                <div className='flex flex-col justify-center items-center gap-2 lg:gap-3'>
+                    <p className='text-sm sm:text-2xl lg:text-3xl font-semibold text-orange-500 dark:text-orange-400'>You don't Borrowed any book yet!</p>
+                    <Link>
+                        <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-white g bg-[var(--color-dark-secondary)]  rounded-full transition-all duration-300'>
+                            <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                            <span className='relative z-10'>
+                                Borrow Book
+                            </span>
+                        </button>
+                    </Link>
+                </div> : <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:px-0 sm:px-16">
                     {borrowedBooks.map((borrowedBook) => (
                         <div key={borrowedBook._id} className="relative group rounded-xl">
                             <div className='bg-[#f5f5f5] dark:bg-[#374151] px-6 pt-6 pb-3 flex justify-center items-center rounded-xl'>
@@ -120,7 +129,7 @@ const BorrowedBooks = () => {
                                         {borrowedBook.bookTitle}
                                     </h1>
                                     <h1 className='text-xs font-semibold text-orange-500 dark:text-orange-300 mb-1'>
-                                        RN date: {borrowedBook.returnDate}
+                                        Return: {borrowedBook.returnDate}
                                     </h1>
                                 </div>
                                 <div className='flex items-center gap-1 text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] text-xs font-semibold mb-2'>
@@ -145,7 +154,7 @@ const BorrowedBooks = () => {
                         </div>
                     ))}
                 </div>
-            </>
+            }
         </div>
     </>
 };

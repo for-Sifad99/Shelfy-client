@@ -1,4 +1,5 @@
-
+import React from 'react';
+import { Link } from "react-router";
 import visa from '../../assets/footerIcons/visa.png';
 import mastercard from '../../assets/footerIcons/mastercard.png';
 import payoneer from '../../assets/footerIcons/payoneer.png';
@@ -11,7 +12,6 @@ import {
     FaLocationArrow
 } from "react-icons/fa";
 import { RiArrowRightDoubleLine } from "react-icons/ri";
-import { Link } from "react-router";
 
 const Footer = () => {
     return (
@@ -80,11 +80,11 @@ const Footer = () => {
                         </div>
                         <p className="md:text-xs sm:text-lg text-sm opacity-70 mb-3">Sign up with your email address to get the latest updates.</p>
                         <div>
-                            <div className="flex flex-col sm:flex-row gap-3 md:w-full sm:w-fit w-full border border-slate-400 dark:border-gray-600 md:p-1 p-[6px] lg:text-sm md:text-xs sm:text-lg text-sm rounded">
+                            <div className="flex flex-col sm:flex-row gap-3 md:max-w-full sm:max-w-fit max-w-[320px] min-[238px] border border-slate-400 dark:border-gray-600 md:p-1 p-[6px] lg:text-sm md:text-xs sm:text-lg text-sm rounded">
                                 <input
                                     type="email"
                                     placeholder="Your Email"
-                                    className="p-2 rounded text-white md:w-full  focus:outline-none"
+                                    className="p-2 rounded text-white md:w-full focus:outline-none"
                                 />
                                 <button className='relative overflow-hidden group lg:text-sm md:text-xs sm:text-lg text-sm font-semibold px-[14px] py-[10px] bg-[var(--color-dark-secondary)] text-white rounded'>
                                     <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-700 group-hover:w-full z-0"></span>
@@ -95,11 +95,11 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-
-
-            <div className="mx-auto mt-6 px-4 sm:px-6 md:px-12 lg:px-6 xl:px-38 py-3 bg-[var(--color-dark-secondary)] dark:bg-[var(--color-bg)] flex flex-col md:flex-row justify-between items-center text-xs sm:gap-4 gap-2">
+            
+            {/* Copyright */}
+            <div className="mx-auto mt-6  sm:px-6 md:px-12 lg:px-6 xl:px-38 py-3 bg-[var(--color-dark-secondary)] dark:bg-[var(--color-bg)] flex flex-col md:flex-row justify-between items-center text-xs sm:gap-4 gap-2">
                 <p>© All Copyrights 2025 | Shelfy</p>
-                <div className="flex gap-3">
+                <div className="flex sm:gap-3 gap-1">
                     <img src={visa}
                         className="w-14 h-8 py-2 px-3 rounded border hover:border-2  border-slate-400 dark:hover:border-1 dark:hover:border-gray-400 dark:border-gray-500 transition duration-300 shadow-md"
                     />

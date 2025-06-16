@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
-import { Link, useParams } from 'react-router';
 import axios from 'axios';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { patchBook } from '../../api/bookApis';
 
 
 const UpdateBook = () => {
+    const axiosSecure = useAxiosSecure();
     const { id } = useParams();
     const [bookInfo, setBookInfo] = useState({});
     const [selectedCategory, setSelectedCategory] = React.useState(bookInfo?.category || '');
@@ -51,7 +54,7 @@ const UpdateBook = () => {
         if (isNaN(bookData.rating) || bookData.rating < 1 || bookData.rating > 5) {
             toast.warning("Rating must be between 1 and 5!");
             return;
-        }
+        };
 
         // Quantity validation
         if (bookData.quantity < 0) {
@@ -61,8 +64,8 @@ const UpdateBook = () => {
 
         // Update and Send to the DB
         try {
-            const res = await axios.patch(`http://localhost:3000/updateBook/${id}`, bookData);
-            if (res.data.modifiedCount > 0 || res.status === 200) {
+            const res = await patchBook(axiosSecure, id, bookData);
+            if (res?.modifiedCount > 0) {
                 // Sweet Alert :
                 const Toast = Swal.mixin({
                     toast: true,
@@ -82,7 +85,7 @@ const UpdateBook = () => {
                 form.reset();
             } else {
                 toast.error("Failed to update book info.");
-            }
+            };
         } catch (err) {
             toast.error("Something went wrong!");
             console.error(err);

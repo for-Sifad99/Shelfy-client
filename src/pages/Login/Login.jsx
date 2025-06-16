@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react";
+import { Link, useLocation, useNavigate, } from "react-router";
 import { Helmet } from "react-helmet-async";
 import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import useAuth from "../../hooks/UseAuth";
-import { Link, useLocation, useNavigate, } from "react-router";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import useAuth from "../../hooks/UseAuth";
 
 
 const Login = () => {
@@ -103,7 +103,6 @@ const Login = () => {
 
         // Empty email check :
         if (!email) {
-
             // Sweet Alert :
             const Toast = Swal.mixin({
                 toast: true,

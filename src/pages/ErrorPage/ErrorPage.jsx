@@ -1,8 +1,8 @@
 import React from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router";
-import { Typewriter } from "react-simple-typewriter";
+import { Helmet } from "react-helmet-async";
 import errorImg from "../../assets/404ErrorIllustration/errorImg.jpg";
+import { Typewriter } from "react-simple-typewriter";
 
 
 const ErrorPage = () => {

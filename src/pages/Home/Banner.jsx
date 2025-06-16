@@ -1,13 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { motion } from "motion/react";
-import { FaArrowRight } from "react-icons/fa";
 import heroGirl from '../../assets/homeBanners/heroGirl.png';
 import heroTop from '../../assets/homeBanners/heroTop.png';
 import heroBottom from '../../assets/homeBanners/heroBottom.png';
 import frame from '../../assets/homeBanners/frame.png';
 import book from '../../assets/homeBanners/book.png';
+import { FaArrowRight } from "react-icons/fa";
 import Slider from './Slider';
-import { Link } from 'react-router';
 
 
 const Banner = () => {

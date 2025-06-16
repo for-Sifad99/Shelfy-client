@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
 import { IoIosArrowForward } from "react-icons/io";
-import { Rating, Star } from '@smastrom/react-rating';
-import '@smastrom/react-rating/style.css';
 import { FaUser } from 'react-icons/fa';
 import { LuTableProperties, LuTableOfContents } from "react-icons/lu";
-import { MdEdit } from 'react-icons/md';
-import { Link, useParams } from 'react-router';
+import { Rating, Star } from '@smastrom/react-rating';
+import '@smastrom/react-rating/style.css';
 import Loader from '../Shared/Loader';
 import Pagination from '../Shared/Pagination';
 import axios from 'axios';
@@ -38,7 +37,7 @@ const CategoryBooks = () => {
                 console.error("Error fetching category books:", error);
             } finally {
                 setLoading(false);
-            }
+            };
         };
 
         fetchCategoryBooks();
@@ -70,8 +69,6 @@ const CategoryBooks = () => {
                 content={`Explore top ${category} books picked just for you. Dive into your favorite genre now on Shelfy!`}
             />
         </Helmet>
-
-
 
         {/* Page Banner */}
         <div className="flex justify-between items-center bg-[#e6eff2] dark:bg-[#19343d] sm:py-6 py-12">

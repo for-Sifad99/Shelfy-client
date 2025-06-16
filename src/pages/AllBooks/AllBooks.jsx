@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
@@ -8,7 +9,6 @@ import '@smastrom/react-rating/style.css';
 import { FaUser } from 'react-icons/fa';
 import { LuTableProperties, LuTableOfContents } from "react-icons/lu";
 import { MdEdit } from 'react-icons/md';
-import { Link } from 'react-router';
 import Loader from '../Shared/Loader';
 import Pagination from '../Shared/Pagination';
 import axios from 'axios';
@@ -26,18 +26,16 @@ const AllBooks = () => {
     // Fetch paginated books based on category & page
     useEffect(() => {
         const fetchCategoryBooks = async () => {
-            setLoading(true);
             try {
-                const res = await axios.get(
-                    `http://localhost:3000/allBooks?page=${currentPage}&limit=${itemsPerPage}`
-                );
+                setLoading(true);
+                const res = await axios.get(`http://localhost:3000/allBooks?page=${currentPage}&limit=${itemsPerPage}`);
                 setBooks(res.data.books);
                 setTotalPages(res.data.totalPages);
             } catch (error) {
-                console.error("Error fetching category books:", error);
+                console.error("Error fetching all books:", error);
             } finally {
                 setLoading(false);
-            }
+            };
         };
 
         fetchCategoryBooks();
@@ -52,7 +50,6 @@ const AllBooks = () => {
         }
         return true;
     });
-
 
     // Handle view change and save to localStorage
     const handleViewChange = (viewType) => {
@@ -133,121 +130,135 @@ const AllBooks = () => {
                 </div>
             </div>
 
-            {/* Card View */}
-            {loading ?
-                <Loader /> :
-                <>
-                    {view === 'card' && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:px-0 sm:px-16">
-                            {filteredBooks.map((book) => (
-                                <div key={book._id} className="relative group rounded-xl">
-                                    <div className='bg-[#f5f5f5] dark:bg-[#374151] px-6 pt-6 pb-3 flex justify-center items-center rounded-xl'>
-                                        <img
-                                            src={book.bookImg}
-                                            alt={book.bookTitle}
-                                            className="w-[120px] h-[150px] object-cover rounded mb-2 transition-transform duration-300 ease-in-out group-hover:scale-110"
-                                        />
-                                    </div>
-                                    <p className='absolute top-3 left-4 text-[10px] bg-[var(--color-dark-secondary)] text-white font-semibold py-1 px-[6px] rounded'>{book.category}</p>
-                                    <div className='bg-white dark:bg-[var(--color-bg)] py-3'>
-                                        <div className='flex items-center justify-between'>
-                                            <div className='flex items-center gap-1 text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] text-xs font-semibold mb-1'>
-                                                <FaUser />{book.authorName}
-                                            </div>
-                                            <div className="text-yellow-500 inline-block mb-2">
-                                                <Rating
-                                                    style={{ maxWidth: 52 }}
-                                                    value={book.rating}
-                                                    readOnly
-                                                    halfFillMode="svg"
-                                                    itemStyles={{
-                                                        itemShapes: Star,
-                                                        activeFillColor: '#ffa900',
-                                                        inactiveFillColor: '#e5e7eb',
-                                                    }}
+            {filteredBooks.length == 0 ?
+                <div className='flex flex-col justify-center items-center gap-2 sm:gap-3 md:mt-10 sm:mt-8 mt-6'>
+                    <p className='text-sm sm:text-2xl lg:text-3xl font-semibold text-orange-500 dark:text-orange-400'>There are no collect in this option!</p>
+                    <Link>
+                        <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-white g bg-[var(--color-dark-secondary)]  rounded-full transition-all duration-300'>
+                            <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                            <span className='relative z-10'>
+                                Back Home
+                            </span>
+                        </button>
+                    </Link>
+                </div> : <>
+                    {/* Card View */}
+                    {loading ?
+                        <Loader /> :
+                        <>
+                            {view === 'card' && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:px-0 sm:px-16">
+                                    {filteredBooks.map((book) => (
+                                        <div key={book._id} className="relative group rounded-xl">
+                                            <div className='bg-[#f5f5f5] dark:bg-[#374151] px-6 pt-6 pb-3 flex justify-center items-center rounded-xl'>
+                                                <img
+                                                    src={book.bookImg}
+                                                    alt={book.bookTitle}
+                                                    className="w-[120px] h-[150px] object-cover rounded mb-2 transition-transform duration-300 ease-in-out group-hover:scale-110"
                                                 />
                                             </div>
-                                        </div>
-                                        <h1 className='dark:text-[#dad5d5] text-xs font-extrabold dark:font-semibold mb-2'>
-                                            {book.bookTitle}
-                                        </h1>
-                                        <Link to={`/update-book/${book._id}`}>
-                                            <button
-                                                className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
-                                                <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                                                <span className='relative z-10 flex gap-1 items-center'>
-                                                    Update <MdEdit size={12} />
-                                                </span>
-                                            </button>
-                                        </Link>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </>
-            }
-
-            {/* Table View */}
-            {loading ?
-                <Loader /> :
-                <>
-                    {view === 'table' && (
-                        <div className="overflow-x-auto md:mx-0 sm:mx-16 rounded-md">
-                            <table className="min-w-full border-2 border-gray-200 dark:border-[#374151] rounded-md">
-                                <thead>
-                                    <tr className="bg-gray-100 dark:bg-[#374151] dark:text-[var(--color-light-primary)]">
-                                        <th className="p-4">Count</th>
-                                        <th className="p-4">Cover</th>
-                                        <th className="p-4">Author</th>
-                                        <th className="p-4">Title</th>
-                                        <th className="p-4">Category</th>
-                                        <th className="p-4">Rating</th>
-                                        <th className="p-4">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredBooks.map((book, index) => (
-                                        <tr key={book._id} className="text-center">
-                                            <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2">
-                                                <h3 className='flex justify-center text-white items-center bg-red-500 dark:bg-red-400 dark:border-[#374151] font-bold w-10 h-10 rounded-full'>{index + 1}</h3>
-                                            </td>
-                                            <td className="border-b-2 border-l-2  border-r-2 border-gray-200 dark:border-[#374151] py-2 flex justify-center mx-auto"><img className='w-[52px]' src={book.bookImg} alt={book.title} /></td>
-                                            <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2"><div className='lg:flex items-center gap-1 text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] lg:text-base md:text-sm text-xs font-semibold'>
-                                                <FaUser className='lg:block hidden' />{book.authorName}
-                                            </div></td>
-                                            <td className="border-b-2 dark:text-gray-300 dark:border-[#374151] lg:text-base md:text-sm text-xs font-semibold border-gray-200 px-4 py-2">{book.bookTitle}</td>
-                                            <td className="border-b-2 text-sm text-gray-500 dark:text-gray-400  font-extrabold border-gray-200 dark:border-[#374151] px-4 py-2">{book.category}</td>
-                                            <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2">
-                                                <h3 className='bg-gray-200 dark:bg-gray-300 dark:text-black dark:border-[#374151] p-1 rounded'>{book.rating}</h3>
-                                            </td>
-                                            <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2">
+                                            <p className='absolute top-3 left-4 text-[10px] bg-[var(--color-dark-secondary)] text-white font-semibold py-1 px-[6px] rounded'>{book.category}</p>
+                                            <div className='bg-white dark:bg-[var(--color-bg)] py-3'>
+                                                <div className='flex items-center justify-between'>
+                                                    <div className='flex items-center gap-1 text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] text-xs font-semibold mb-1'>
+                                                        <FaUser />{book.authorName}
+                                                    </div>
+                                                    <div className="text-yellow-500 inline-block mb-2">
+                                                        <Rating
+                                                            style={{ maxWidth: 52 }}
+                                                            value={book.rating}
+                                                            readOnly
+                                                            halfFillMode="svg"
+                                                            itemStyles={{
+                                                                itemShapes: Star,
+                                                                activeFillColor: '#ffa900',
+                                                                inactiveFillColor: '#e5e7eb',
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <h1 className='dark:text-[#dad5d5] text-xs font-extrabold dark:font-semibold mb-2'>
+                                                    {book.bookTitle}
+                                                </h1>
                                                 <Link to={`/update-book/${book._id}`}>
                                                     <button
-                                                        className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
+                                                        className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                                         <span className='relative z-10 flex gap-1 items-center'>
                                                             Update <MdEdit size={12} />
                                                         </span>
                                                     </button>
                                                 </Link>
-                                            </td>
-                                        </tr>
+                                            </div>
+                                        </div>
                                     ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                                </div>
+                            )}
+                        </>
+                    }
+
+                    {/* Table View */}
+                    {loading ?
+                        <Loader /> :
+                        <>
+                            {view === 'table' && (
+                                <div className="overflow-x-auto md:mx-0 sm:mx-16 rounded-md">
+                                    <table className="min-w-full border-2 border-gray-200 dark:border-[#374151] rounded-md">
+                                        <thead>
+                                            <tr className="bg-gray-100 dark:bg-[#374151] dark:text-[var(--color-light-primary)]">
+                                                <th className="p-4">Count</th>
+                                                <th className="p-4">Cover</th>
+                                                <th className="p-4">Author</th>
+                                                <th className="p-4">Title</th>
+                                                <th className="p-4">Category</th>
+                                                <th className="p-4">Rating</th>
+                                                <th className="p-4">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {filteredBooks.map((book, index) => (
+                                                <tr key={book._id} className="text-center">
+                                                    <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2">
+                                                        <h3 className='flex justify-center text-white items-center bg-red-500 dark:bg-red-400 dark:border-[#374151] font-bold w-10 h-10 rounded-full'>{index + 1}</h3>
+                                                    </td>
+                                                    <td className="border-b-2 border-l-2  border-r-2 border-gray-200 dark:border-[#374151] py-2 flex justify-center mx-auto"><img className='w-[52px]' src={book.bookImg} alt={book.title} /></td>
+                                                    <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2"><div className='lg:flex items-center gap-1 text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] lg:text-base md:text-sm text-xs font-semibold'>
+                                                        <FaUser className='lg:block hidden' />{book.authorName}
+                                                    </div></td>
+                                                    <td className="border-b-2 dark:text-gray-300 dark:border-[#374151] lg:text-base md:text-sm text-xs font-semibold border-gray-200 px-4 py-2">{book.bookTitle}</td>
+                                                    <td className="border-b-2 text-sm text-gray-500 dark:text-gray-400  font-extrabold border-gray-200 dark:border-[#374151] px-4 py-2">{book.category}</td>
+                                                    <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2">
+                                                        <h3 className='bg-gray-200 dark:bg-gray-300 dark:text-black dark:border-[#374151] p-1 rounded'>{book.rating}</h3>
+                                                    </td>
+                                                    <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2">
+                                                        <Link to={`/update-book/${book._id}`}>
+                                                            <button
+                                                                className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
+                                                                <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                                                                <span className='relative z-10 flex gap-1 items-center'>
+                                                                    Update <MdEdit size={12} />
+                                                                </span>
+                                                            </button>
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </>
+                    }
+
+                    <div className='text-center mt-6 text-xl'>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            setCurrentPage={setCurrentPage}
+                        />
+                    </div>
                 </>
             }
-
-            <div className='text-center mt-6 text-xl'>
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    setCurrentPage={setCurrentPage}
-                />
-            </div>
         </div>
     </>
 };
