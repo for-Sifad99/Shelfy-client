@@ -32,7 +32,7 @@ const HighRatingBooks = () => {
     };
 
     return (
-        <div className="px-6 md:px-12 lg:px-6 xl:px-38 sm:py-22 py-12 my-10">
+        <div className="px-6 md:px-12 lg:px-6 xl:px-38 lg:pt-12 md:pt-10 sm:pt-6 pb-12">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:mb-10 mb-8">
                 <h1 className='text-2xl md:text-3xl font-semibold text-[var(--color-dark-primary)] dark:text-[var(--color-light-primary)]'>Top Rating Books</h1>
                 <Link to='/all-books'>
@@ -77,10 +77,10 @@ const HighRatingBooks = () => {
                                         }}
                                     />
                                 </div>
-                                <h1 className='dark:text-[#dad5d5] text-sm font-bold dark:font-semibold mb-1'>
+                                <h1 className='dark:text-[#dad5d5] text-gray-500 text-sm font-bold dark:font-normal mb-1'>
                                     {book.bookTitle}
                                 </h1>
-                                <div className='flex items-center gap-1 text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] text-sm font-bold mb-2'>
+                                <div className='flex items-center gap-1 text-black dark:text-[var(--color-light-primary)] text-sm font-bold mb-2'>
                                     <img src={avatar} className='w-6 h-6 rounded-full' alt="Default avatar image" />
                                     {book.authorName}
                                 </div>

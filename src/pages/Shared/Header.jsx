@@ -114,8 +114,8 @@ const Header = () => {
                     <div className="hidden lg:flex text-[var(--color-dark-primary)] dark:text-[var(--color-light-primary)] border-2 border-gray-200 dark:border-gray-600 rounded-full overflow-hidden xl:mr-2 mr-1">
                         <select className="px-4 py-[11px] bg-white dark:bg-[#333a45] outline-none">
                             <option>Category</option>
-                            <option>Science</option>
-                            <option>Fiction</option>
+                            <option>History</option>
+                            <option>Sci-fi</option>
                         </select>
                         <input
                             type="text"

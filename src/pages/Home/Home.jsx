@@ -1,8 +1,11 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import Banner from './Banner';
+import InfoBanner from './InfoBanner';
 import Categories from './Categories';
 import HighRatingBooks from './HighRating';
+import LatestNews from './LatestNews';
+
 
 
 const Home = () => {
@@ -18,11 +21,17 @@ const Home = () => {
             {/* Content */}
             <Banner />
 
+            {/* Info Banner */}
+            <InfoBanner  />
+
             {/* Categories */}
             <Categories />
 
             {/* High Rating Books Collection */}
             <HighRatingBooks />
+
+            {/* Latest Newses */}
+            <LatestNews />
         </>
     );
 };

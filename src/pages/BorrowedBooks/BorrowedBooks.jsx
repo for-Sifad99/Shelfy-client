@@ -135,14 +135,12 @@ const BorrowedBooks = () => {
                             </div>
                             <p className='absolute top-3 left-4 text-[10px] bg-[var(--color-dark-secondary)] text-white font-semibold py-1 px-[6px] rounded'>{borrowedBook.category}</p>
                             <div className='bg-white dark:bg-[var(--color-bg)] py-3'>
-                                <div className='flex items-center justify-between'>
-                                    <h1 className='dark:text-[#dad5d5] text-xs font-extrabold dark:font-semibold mb-1'>
-                                        {borrowedBook.bookTitle}
-                                    </h1>
-                                    <h1 className='text-xs font-semibold text-orange-500 dark:text-orange-300 mb-1'>
-                                        Return: {borrowedBook.returnDate}
-                                    </h1>
-                                </div>
+                                <h1 className='text-xs text-right font-semibold text-orange-500 dark:text-orange-300 mb-1'>
+                                    Return: {borrowedBook.returnDate}
+                                </h1>
+                                <h1 className='dark:text-[#dad5d5] text-xs font-extrabold dark:font-semibold mb-1'>
+                                    {borrowedBook.bookTitle}
+                                </h1>
                                 <div className='flex items-center gap-1 text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] text-xs font-semibold mb-2'>
                                     <span className='flex items-center gap-1 text-black dark:text-[#dad5d5]'>   <FaUser />Borrowed by: </span>
                                     {borrowedBook.name}
