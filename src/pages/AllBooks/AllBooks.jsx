@@ -27,7 +27,7 @@ const AllBooks = () => {
     useEffect(() => {
         const fetchCategoryBooks = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/allBooks?page=${currentPage}&limit=${itemsPerPage}`);
+                const res = await axios.get(`https://shelfy-book-server.vercel.app/allBooks?page=${currentPage}&limit=${itemsPerPage}`);
                 setBooks(res.data.books);
                 setTotalPages(res.data.totalPages);
             } catch (error) {

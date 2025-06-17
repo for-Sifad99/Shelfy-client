@@ -19,7 +19,7 @@ const UpdateBook = () => {
 
     // Fetch book info by Id
     useEffect(() => {
-        axios.get(`http://localhost:3000/allBooks/${id}`)
+        axios.get(`https://shelfy-book-server.vercel.app/allBooks/${id}`)
             .then(res => {
                 setBookInfo(res.data);
                 setSelectedCategory(res.data.category || '');

@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import {patchBook} from '../../api/bookApis';
+import { patchBook } from '../../api/bookApis';
 
 
 const BookDetails = () => {
@@ -26,7 +26,7 @@ const BookDetails = () => {
     const [returnDate, setReturnDate] = useState("");
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/allBooks/${id}`)
+        axios.get(`https://shelfy-book-server.vercel.app/allBooks/${id}`)
             .then(res => setBook(res.data))
             .catch(err => console.error("Failed to fetch book info", err));
     }, [id]);
@@ -54,7 +54,7 @@ const BookDetails = () => {
         }
         try {
             // 1. Borrow info save
-            await axios.post('http://localhost:3000/addBorrowedBookInfo', borrowedData);
+            await axios.post('https://shelfy-book-server.vercel.app/addBorrowedBookInfo', borrowedData);
 
             // 2. Quantity decrease in DB
             await patchBook(axiosSecure, id, {
@@ -161,7 +161,7 @@ const BookDetails = () => {
                         onClick={() => setShowModal(true)}
                         className='relative overflow-hidden group sm:text-sm text-xs font-semibold px-6 py-[8px] w-[160px] flex justify-center text-[var(--color-dark-secondary)] hover:text-white  bg-[#eeebfd] rounded-full transition-all duration-300 mt-2 disabled:opacity-50 disabled:cursor-not-allowed'>
                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                        <span className='relative z-10 flex gap-1 items-center'><IoCart className="text-base"/>Borrow</span>
+                        <span className='relative z-10 flex gap-1 items-center'><IoCart className="text-base" />Borrow</span>
                     </button>
 
                     {/* Book Content */}

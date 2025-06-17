@@ -7,7 +7,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import useAuth from "../../hooks/UseAuth";
+import useAuth from "../../hooks/useAuth";
 
 
 const Login = () => {
@@ -25,7 +25,7 @@ const Login = () => {
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
-        console.log(email, password);
+        // console.log(email, password);
 
         //? SignIn User:
         try {
@@ -68,9 +68,7 @@ const Login = () => {
         };
     };
 
-    const handleGoogleLogin = async (e) => {
-        e.preventDefault();
-
+    const handleGoogleLogin = async () => {
         //? Login User with Google:
         const user = await createGoogleUser();
         const currentUser = user;

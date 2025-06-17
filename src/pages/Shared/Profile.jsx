@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { MdLogout } from "react-icons/md";
 import Swal from "sweetalert2";
-import useAuth from '../../hooks/UseAuth';
+import useAuth from '../../hooks/useAuth';
 
 
 const Profile = () => {

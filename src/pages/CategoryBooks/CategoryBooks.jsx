@@ -29,7 +29,7 @@ const CategoryBooks = () => {
         const fetchCategoryBooks = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/allBooks?category=${category}&page=${currentPage}&limit=${itemsPerPage}`
+                    `https://shelfy-book-server.vercel.app/allBooks?category=${category}&page=${currentPage}&limit=${itemsPerPage}`
                 );
                 setBooks(res.data.books);
                 setTotalPages(res.data.totalPages);

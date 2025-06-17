@@ -10,7 +10,6 @@ import Swal from 'sweetalert2';
 import useAuth from '../../hooks/useAuth';
 import axios from 'axios';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import Loader from '../Shared/Loader';
 import { patchBook } from '../../api/bookApis';
 
 
@@ -18,31 +17,29 @@ const BorrowedBooks = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [borrowedBooks, setBorrowedBooks] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (!user?.email) return;
+
         const fetchBorrowedBooks = async () => {
             try {
-                const BorrowedBooks = await axios.get(`http://localhost:3000/borrowedBooks/${user.email}`)
-                setBorrowedBooks(BorrowedBooks.data);
+                const res = await axios.get(`https://shelfy-book-server.vercel.app/borrowedBooks/${user.email}`);
+                setBorrowedBooks(res.data);
             } catch (error) {
                 console.error("Error fetching borrowed books:", error);
-            } finally {
-                setLoading(false);
             }
         };
 
-        if (user?.email) {
-            fetchBorrowedBooks();
-        };
-    }, [user.email]);
+        fetchBorrowedBooks();
+    }, [user?.email]);
+
 
     const handleReturn = async (borrowedId, bookId, currentQuantity) => {
         try {
             await patchBook(axiosSecure, bookId, {
                 quantity: currentQuantity + 1
             });
-            await axios.delete(`http://localhost:3000/deleteBorrowedBook/${borrowedId}`);
+            await axios.delete(`https://shelfy-book-server.vercel.app/deleteBorrowedBook/${borrowedId}`);
 
             // Sweet Alert :
             const Toast = Swal.mixin({
@@ -68,10 +65,6 @@ const BorrowedBooks = () => {
         } catch (error) {
             console.error("Error returning the book:", error);
         };
-    };
-
-    if (loading) {
-        return <Loader />
     };
 
     return <>
@@ -108,63 +101,64 @@ const BorrowedBooks = () => {
                 alt="Banner Book2 image"
                 className="hidden sm:block w-28 md:w-34 lg:w-40 pt-10"
             />
-        </div>
+        </div >
 
         {/* Main Content */}
-        <div className="sm:py-16 py-8 px-4 md:px-10 lg:px-4 xl:px-36">
-            {borrowedBooks.length === 0 ?
-                <div className='flex flex-col justify-center items-center gap-2 lg:gap-3'>
-                    <p className='text-sm sm:text-2xl lg:text-3xl font-semibold text-orange-500 dark:text-orange-400'>You don't Borrowed any book yet!</p>
-                    <Link to='/'>
-                        <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-white g bg-[var(--color-dark-secondary)]  rounded-full transition-all duration-300'>
-                            <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                            <span className='relative z-10'>
-                                Borrow Book
-                            </span>
-                        </button>
-                    </Link>
-                </div> : <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:px-0 sm:px-16">
-                    {borrowedBooks.map((borrowedBook) => (
-                        <div key={borrowedBook._id} className="relative group rounded-xl">
-                            <div className='bg-[#f5f5f5] dark:bg-[#374151] px-6 pt-6 pb-3 flex justify-center items-center rounded-xl'>
-                                <img
-                                    src={borrowedBook.bookImg}
-                                    alt={borrowedBook.bookTitle}
-                                    className="w-[120px] h-[150px] object-cover rounded mb-2 transition-transform duration-300 ease-in-out group-hover:scale-110"
-                                />
-                            </div>
-                            <p className='absolute top-3 left-4 text-[10px] bg-[var(--color-dark-secondary)] text-white font-semibold py-1 px-[6px] rounded'>{borrowedBook.category}</p>
-                            <div className='bg-white dark:bg-[var(--color-bg)] py-3'>
-                                <h1 className='text-xs text-right font-semibold text-orange-500 dark:text-orange-300 mb-1'>
-                                    Return: {borrowedBook.returnDate}
-                                </h1>
-                                <h1 className='dark:text-[#dad5d5] text-xs font-extrabold dark:font-semibold mb-1'>
-                                    {borrowedBook.bookTitle}
-                                </h1>
-                                <div className='flex items-center gap-1 text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] text-xs font-semibold mb-2'>
-                                    <span className='flex items-center gap-1 text-black dark:text-[#dad5d5]'>   <FaUser />Borrowed by: </span>
-                                    {borrowedBook.name}
+        <div className="sm:py-16 py-8 px-4 md:px-10 lg:px-4 xl:px-36" >
+            {
+                borrowedBooks.length === 0 ?
+                    <div className='flex flex-col justify-center items-center gap-2 lg:gap-3'>
+                        <p className='text-sm sm:text-2xl lg:text-3xl font-semibold text-orange-500 dark:text-orange-400'>You don't Borrowed any book yet!</p>
+                        <Link to='/'>
+                            <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-white g bg-[var(--color-dark-secondary)]  rounded-full transition-all duration-300'>
+                                <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                                <span className='relative z-10'>
+                                    Borrow Book
+                                </span>
+                            </button>
+                        </Link>
+                    </div> : <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:px-0 sm:px-16">
+                        {borrowedBooks.map((borrowedBook) => (
+                            <div key={borrowedBook._id} className="relative group rounded-xl">
+                                <div className='bg-[#f5f5f5] dark:bg-[#374151] px-6 pt-6 pb-3 flex justify-center items-center rounded-xl'>
+                                    <img
+                                        src={borrowedBook.bookImg}
+                                        alt={borrowedBook.bookTitle}
+                                        className="w-[120px] h-[150px] object-cover rounded mb-2 transition-transform duration-300 ease-in-out group-hover:scale-110"
+                                    />
                                 </div>
+                                <p className='absolute top-3 left-4 text-[10px] bg-[var(--color-dark-secondary)] text-white font-semibold py-1 px-[6px] rounded'>{borrowedBook.category}</p>
+                                <div className='bg-white dark:bg-[var(--color-bg)] py-3'>
+                                    <h1 className='text-xs text-right font-semibold text-orange-500 dark:text-orange-300 mb-1'>
+                                        Return: {borrowedBook.returnDate}
+                                    </h1>
+                                    <h1 className='dark:text-[#dad5d5] text-xs font-extrabold dark:font-semibold mb-1'>
+                                        {borrowedBook.bookTitle}
+                                    </h1>
+                                    <div className='flex items-center gap-1 text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] text-xs font-semibold mb-2'>
+                                        <span className='flex items-center gap-1 text-black dark:text-[#dad5d5]'>   <FaUser />Borrowed by: </span>
+                                        {borrowedBook.name}
+                                    </div>
 
-                                <button
-                                    onClick={() => handleReturn(
-                                        borrowedBook._id,
-                                        borrowedBook.bookId,
-                                        borrowedBook.quantity
-                                    )}
-                                    type='button'
-                                    className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
-                                    <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                                    <span className='relative z-10 flex gap-1 items-center'>
-                                        <IoMdReturnRight className='text-base' /> Return
-                                    </span>
-                                </button>
+                                    <button
+                                        onClick={() => handleReturn(
+                                            borrowedBook._id,
+                                            borrowedBook.bookId,
+                                            borrowedBook.quantity
+                                        )}
+                                        type='button'
+                                        className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
+                                        <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                                        <span className='relative z-10 flex gap-1 items-center'>
+                                            <IoMdReturnRight className='text-base' /> Return
+                                        </span>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
             }
-        </div>
+        </div >
     </>
 };
 

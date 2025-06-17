@@ -7,7 +7,6 @@ import HighRatingBooks from './HighRating';
 import LatestNews from './LatestNews';
 
 
-
 const Home = () => {
     return (
         <>

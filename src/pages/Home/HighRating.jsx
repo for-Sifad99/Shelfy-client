@@ -15,7 +15,7 @@ const HighRatingBooks = () => {
     useEffect(() => {
         const fetchTopRatingBooks = async () => {
             try {
-                const res = await axios.get('http://localhost:3000/topRatingbooks');
+                const res = await axios.get('https://shelfy-book-server.vercel.app/topRatingbooks');
                 setBooks(res.data);
             } catch (error) {
                 console.error("Error fetching top rating books:", error);
@@ -28,7 +28,7 @@ const HighRatingBooks = () => {
     }, []);
 
     if (loading) {
-        return <span className="loading loading-spinner loading-xl"></span>
+        return <div className='flex mx-auto justify-center items-center my-20'><span className="loading loading-spinner loading-xl"></span></div>
     };
 
     return (

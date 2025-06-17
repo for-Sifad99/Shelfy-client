@@ -1,15 +1,12 @@
 # 📚 Shelfy - Library Management System
-
 Welcome to **Shelfy**, a dynamic and fully-featured Library Management System built for a prestigious school to manage their entire book collection, borrowing, and return system seamlessly.
 
 ## 🌐 Live Website
-
-🔗 [Live Site URL](https://your-shelfy-live-site-link.com)
+🔗 [Live Site URL](https://shelfybook.netlify.app/)
 
 ---
 
 ## 📋 Project Overview
-
 Shelfy is a modern, responsive, and fully functional web application that helps a school manage its library effectively. It allows admin users to add, update, and categorize books, while authenticated users can borrow and return books in real-time.
 
 Built with ❤️ using **React**, **Tailwind CSS**, **Firebase**, **Express.js**, and **MongoDB**, this project showcases practical problem-solving skills, secure authentication, and efficient database interactions.
@@ -17,7 +14,6 @@ Built with ❤️ using **React**, **Tailwind CSS**, **Firebase**, **Express.js*
 ---
 
 ## 🎯 Project Features
-
 ### 👨‍💼 Authentication System
 - Email/password login & registration
 - Social login (Google)
@@ -45,45 +41,20 @@ Built with ❤️ using **React**, **Tailwind CSS**, **Firebase**, **Express.js*
 
 ---
 
-## 📁 Folder Structure Highlights
-
-src/
-├── api/
-├── assets/
-├── contexts/
-├── hooks/
-├── layouts/
-├── pages/
-│ ├── AddBooks
-│ ├── AllBooks
-│ ├── BookDetails
-│ ├── BorrowedBooks
-│ ├── CategoryBooks
-│ ├── Home
-│ ├── Login
-│ ├── Register
-│ ├── Shared
-│ └── UpdateBook
-├── router/
-├── App.jsx
-└── main.jsx
-
----
-
 ## 🔧 Technologies Used
 
-| Tech Stack        | Description |
-|-------------------|-------------|
-| React             | Frontend library |
-| React Router      | Routing |
-| Tailwind CSS      | Styling |
-| Firebase          | Authentication |
-| Express.js        | Backend server |
-| MongoDB + Mongoose| Database |
-| Vite              | Frontend bundler |
-| React Hook Form   | Form management |
-| Axios             | HTTP requests with interceptor support |
-| Framer Motion     | Smooth animations |
+| Tech Stack         | Description                            |
+| ------------------ | -------------------------------------- |
+| React              | Frontend library                       |
+| React Router       | Routing                                |
+| Tailwind CSS       | Styling                                |
+| Firebase           | Authentication                         |
+| Express.js         | Backend server                         |
+| MongoDB + Mongoose | Database                               |
+| Vite               | Frontend bundler                       |
+| React Hook Form    | Form management                        |
+| Axios              | HTTP requests with interceptor support |
+| Framer Motion      | Smooth animations                      |
 
 ---
 
@@ -107,8 +78,8 @@ src/
 
 ```bash
 # Clone the project
-git clone https://github.com/your-username/shelfy-client.git
-cd shelfy-client
+git clone https://github.com/Programming-Hero-Web-Course4/b11a11-client-side-for-Sifad99
+cd shelfy-book-client
 
 # Install dependencies
 npm install
@@ -122,8 +93,9 @@ npm run dev
 ---
 
 🔗 Repositories
-Client Repo
-Server Repo
+Client Repo : https://github.com/Programming-Hero-Web-Course4/b11a11-client-side-for-Sifad99
+
+Server Repo : https://github.com/Programming-Hero-Web-Course4/b11a11-server-side-for-Sifad99
 
 ---
 
@@ -133,4 +105,4 @@ Made with 💙 by Sifad – a passionate MERN Stack Developer.
 📢 Feedback
 If you have any suggestions or feedback, feel free to contact or open an issue on GitHub!
 
-
+```

@@ -7,10 +7,11 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import useAuth from "../../hooks/UseAuth";
+import useAuth from "../../hooks/useAuth";
+
 
 const Register = () => {
-    const { createUser, createGoogleUser, signOutUser } = useAuth();
+    const { setUser, createUser, createGoogleUser, profileUpdate, signOutUser } = useAuth();
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState();
@@ -25,7 +26,7 @@ const Register = () => {
         const email = form.email.value;
         const password = form.password.value;
         const checkbox = form.checkbox.checked;
-        console.log(photo, email, password, checkbox);
+        // console.log(name, photo, email, password, checkbox);
 
         // empty validation
         if (!name || !photo || !email || !password) {
@@ -45,7 +46,14 @@ const Register = () => {
 
         //? Create User:
         try {
-            await createUser(email, password);
+            const currentUser = await createUser(email, password);
+
+            // ✅ Update displayName and photoURL
+            profileUpdate(currentUser.user, {
+                displayName: name,
+                photoURL: photo
+            });
+            setUser(currentUser.user);
 
             // Sweet Alert:
             const Toast = Swal.mixin({
@@ -75,12 +83,12 @@ const Register = () => {
         };
     };
 
-    const handleGoogleUser = async (e) => {
-        e.preventDefault();
-
+    const handleGoogleUser = async () => {
         //? Create User with Google:
         try {
-            await createGoogleUser();
+            const currentUser = await createGoogleUser();
+            setUser(currentUser.user);
+
             // Sweet Alert :
             const Toast = Swal.mixin({
                 toast: true,
