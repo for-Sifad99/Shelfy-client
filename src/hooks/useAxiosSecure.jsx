@@ -3,7 +3,7 @@ import axios from 'axios';
 import useAuth from '../hooks/useAuth';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://shelfybook.netlify.app'
+    baseURL: 'https://shelfy-book-server.vercel.app/'
 });
 const useAxiosSecure = () => {
     const { user, signOutUser } = useAuth();
