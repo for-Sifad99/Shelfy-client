@@ -4,6 +4,7 @@ import news2 from '../../assets/latestNews/news2.jpg';
 import news3 from '../../assets/latestNews/news3.jpg';
 import news4 from '../../assets/latestNews/news4.jpg';
 
+// News data
 const newsData = [
     {
         id: 1,
@@ -37,12 +38,12 @@ const newsData = [
 
 const LatestNews = () => {
     return (
-        <section className="bg-[#dce9ee] dark:bg-[#2d343f] py-12 px-4">
+        <section className="bg-[#dce9ee] dark:bg-[#2d343f] px-4 py-12 sm:py-20">
             <div className="text-center sm:mb-10 mb-6">
                 <h2 className="text-2xl sm:text-3xl font-bold  dark:text-[var(--color-light-primary)] sm:mb-2 mb-1">Our Latest News</h2>
                 <p className="sm:text-sm text-xs text-gray-600 dark:text-gray-300">
-                    Stay updated with our most recent stories, tips, and highlights—handpicked just for you. <br />
-                    Explore what's happening, what's trending, and what's inspiring right now.
+                    Stay updated with our most recent stories, tips, and highlights—handpicked just for you. <span className="hidden sm:block">
+                        Explore what's happening, what's trending, and what's inspiring right now.</span>
                 </p>
             </div>
 
@@ -50,7 +51,7 @@ const LatestNews = () => {
                 {newsData.map((item) => (
                     <div
                         key={item.id}
-                        className=" bg-white dark:bg-[#b9c5d8] rounded-lg shadow-md overflow-hidden  transition-all duration-400 group hover:-translate-y-2"
+                        className=" bg-white dark:bg-[#075a75] rounded-lg shadow-md overflow-hidden  transition-all duration-400 group hover:-translate-y-2"
                     >
                         <div className="relative">
                             <img src={item.img} alt={item.title} className="w-full sm:h-40 h-44 object-cover p-3 rounded group-hover:scale-104 transition-all duration-400" />
@@ -59,7 +60,7 @@ const LatestNews = () => {
                             </span>
                         </div>
                         <div className="px-4 pb-2">
-                            <div className="flex items-center text-[10px] text-gray-500 dark:text-gray-900 text-semibold  mb-1 gap-4">
+                            <div className="flex items-center text-[10px] text-gray-500 dark:text-gray-200 text-semibold  mb-1 gap-4">
                                 <div className="flex items-center gap-1">
                                     <FaCalendarAlt />
                                     <span>{item.date}</span>
@@ -69,10 +70,10 @@ const LatestNews = () => {
                                     <span>By {item.author}</span>
                                 </div>
                             </div>
-                            <h3 className="text-xs font-semibold text-gray-800 dark:text-black">{item.title}</h3>
+                            <h3 className="text-xs font-semibold text-gray-800 dark:text-white">{item.title}</h3>
                             <a
                                 href="#"
-                                className="text-sky-600 dark:text-blue-700 text-xs font-medium hover:underline inline-flex items-center gap-1"
+                                className="text-sky-600 dark:text-blue-300 text-xs font-medium hover:underline inline-flex items-center gap-1"
                             >
                                 Read More →
                             </a>

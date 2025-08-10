@@ -18,19 +18,22 @@ const Home = () => {
             </Helmet>
 
             {/* Content */}
-            <Banner />
+            <section className='max-w-[1600px] mx-auto'>
+                {/* Content */}
+                <Banner />
 
-            {/* Info Banner */}
-            <InfoBanner  />
+                {/* Info Banner */}
+                <InfoBanner />
 
-            {/* Categories */}
-            <Categories />
+                {/* Categories */}
+                <Categories />
 
-            {/* High Rating Books Collection */}
-            <HighRatingBooks />
+                {/* High Rating Books Collection */}
+                <HighRatingBooks />
 
-            {/* Latest Newses */}
-            <LatestNews />
+                {/* Latest Newses */}
+                <LatestNews />
+            </section>
         </>
     );
 };

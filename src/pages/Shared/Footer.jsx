@@ -16,7 +16,7 @@ import { RiArrowRightDoubleLine } from "react-icons/ri";
 const Footer = () => {
     return (
         <footer className="bg-[#002D44] dark:bg-[var(--color-bg)] text-white dark:border-t dark:border-[#535353]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-6 xl:px-30 pt-12">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 lg:px-6 xl:px-30 pt-12">
                 <div className="grid xl:gap-6 md:gap-0 gap-10 md:grid-cols-5 text-sm md:text-base">
                     {/* Brand Info */}
                     <div className="md:col-span-2 md:pr-6">
@@ -97,7 +97,7 @@ const Footer = () => {
             </div>
             
             {/* Copyright */}
-            <div className="mx-auto mt-6  sm:px-6 md:px-12 lg:px-6 xl:px-38 py-3 bg-[var(--color-dark-secondary)] dark:bg-[var(--color-bg)] flex flex-col md:flex-row justify-between items-center text-xs sm:gap-4 gap-2">
+            <div className="max-w-[1600px] mx-auto mt-6  sm:px-6 md:px-12 lg:px-6 xl:px-38 py-3 bg-[var(--color-dark-secondary)] dark:bg-[var(--color-bg)] flex flex-col md:flex-row justify-between items-center text-xs sm:gap-4 gap-2">
                 <p>© All Copyrights 2025 | Shelfy</p>
                 <div className="flex sm:gap-3 gap-1">
                     <img src={visa}

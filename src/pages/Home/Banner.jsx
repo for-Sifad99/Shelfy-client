@@ -7,22 +7,19 @@ import heroBottom from '../../assets/homeBanners/heroBottom.png';
 import frame from '../../assets/homeBanners/frame.png';
 import book from '../../assets/homeBanners/book.png';
 import { FaArrowRight } from "react-icons/fa";
-import Slider from './Slider';
-
 
 const Banner = () => {
     return (
-        <section className='relative overflow-hidden'>
-            {/* Slider banner hero */}
-            <Slider />
-
+        <section className='relative overflow-x-hidden'>
+            <img src="https://i.postimg.cc/9XTbxCg8/banner1.png" className='w-full h-[532px]' alt="" />
+            
             {/* Banner top shape image */}
             <img className='absolute top-0 sm:right-1 right-0 sm:w-[500px] w-[440px]' src={heroTop} alt="hero Top image" />
 
             {/* Banner text content */}
             <div className='absolute sm:top-38 top-24 lg:left-38 left-4 lg:w-[540px] md:w-[520px] w-[270px]'>
                 <h4 className='md:text-2xl text-lg text-[var(--color-primary-orange)]'>Up to 30% Off</h4>
-                <h1 className='lg:text-6xl md:text-5xl text-3xl text-[var(--color-dark-primary)] font-semibold md:mt-1 md:mb-5 mb-3 lg:leading-15 md:leading-13'>Get Your New Book
+                <h1 className='lg:text-6xl md:text-5xl text-[26px] text-[var(--color-dark-primary)] font-semibold md:mt-1 md:mb-5 mb-3 lg:leading-15 md:leading-13'>Get Your New Book
                     With The Best Price</h1>
                 <Link to='all-books'>
                     <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] bg-[var(--color-dark-secondary)] text-white rounded-full'>

@@ -7,6 +7,7 @@ import Root from '../layouts/Root';
 import Home from '../pages/Home/Home';
 import AllBooks from '../pages/AllBooks/AllBooks';
 import BorrowedBooks from '../pages/BorrowedBooks/BorrowedBooks';
+import Blogs from '../pages/Blogs/Blogs';
 import AddBooks from '../pages/AddBooks/AddBooks';
 import CategoryBooks from '../pages/CategoryBooks/CategoryBooks';
 import BookDetails from '../pages/BookDetails/BookDetails';
@@ -27,16 +28,20 @@ const router = createBrowserRouter([
             },
             {
                 path: '/all-books',
-                element: <PrivetRouter><AllBooks /></PrivetRouter>
+                element: <AllBooks />
             },
             {
                 path: '/add-Books',
 
-                element: <PrivetRouter> <AddBooks /></PrivetRouter>
+                element: <PrivetRouter><AddBooks /></PrivetRouter>
             },
             {
                 path: '/borrowed-Books',
                 element: <PrivetRouter><BorrowedBooks /></PrivetRouter>
+            },
+            {
+                path: '/blogs',
+                element: <Blogs />
             },
             {
                 path: '/category-Books/:category',

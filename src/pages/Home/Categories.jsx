@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { FaBook } from "react-icons/fa";
 
+// Categories data
 const books = [
     {
         "bookImg": "https://i.postimg.cc/VLn9Gz5Z/images.jpg",
@@ -23,7 +24,7 @@ const books = [
 
 const Categories = () => {
     return (
-        <section className='bg-[#d0e1e7] dark:bg-[#2d343f] xl:px-40 md:px-6 sm:py-22 px-4 py-12 my-14'>
+        <section className='bg-[#d0e1e7] dark:bg-[#2d343f] xl:px-40 md:px-6 px-4 py-12 sm:py-20 mt-10 sm:mt-16'>
             <div className='flex flex-col sm:flex-row items-center justify-between sm:mb-10 mb-8 xl:px-9 lg:px-6 md:px-12 px-6 gap-2'>
                 <h1 className='text-2xl md:text-3xl font-semibold text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)]'>Book Categories</h1>
                 <Link to='/all-books'>

@@ -32,7 +32,7 @@ const HighRatingBooks = () => {
     };
 
     return (
-        <div className="px-6 md:px-12 lg:px-6 xl:px-38 lg:pt-12 md:pt-10 sm:pt-6 pb-12">
+        <div className="px-6 md:px-12 lg:px-6 xl:px-38 py-12 sm:py-20">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:mb-10 mb-8">
                 <h1 className='text-2xl md:text-3xl font-semibold text-[var(--color-dark-primary)] dark:text-[var(--color-light-primary)]'>Top Rating Books</h1>
                 <Link to='/all-books'>
@@ -51,7 +51,7 @@ const HighRatingBooks = () => {
                 pauseOnHover={true}
                 autoFill={false}
             >
-                <div className="flex gap-4 sm:pl-4 animate-[slide_10s_linear_infinite]">
+                <div className="flex gap-4 pl-4 animate-[slide_10s_linear_infinite]">
                     {books.map((book, index) => (
                         <div key={book._id}
                             style={{ animationDelay: `${index * 0.5}s` }} className="relative group rounded-xl">
