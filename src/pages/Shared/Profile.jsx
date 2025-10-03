@@ -14,7 +14,6 @@ const Profile = () => {
     const profileRef = useRef(null);
 
     const handleSignOut = async () => {
-
         // Sweet Alert:
         Swal.fire({
             title: "Are you sure?",
@@ -81,7 +80,7 @@ const Profile = () => {
             {/* Profile Picture */}
             <img
                 ref={profileRef}
-                src={user?.photoURL || "/default-user.png"}
+                src={user?.photoURL}
                 alt="User"
                 onClick={handleProfileClick}
                 className="sw-[31px] h-[31px] m:w-[34px] sm:h-[34px] md:w-[35px] md:h-[35px] rounded-full border-2 border-[#e0e0e0] dark:border-[#3f3f3f] cursor-pointer"
@@ -95,7 +94,7 @@ const Profile = () => {
                 >
                     <div className="flex items-center gap-2">
                         <img
-                            src={user?.photoURL || "/default-user.png"}
+                            src={user?.photoURL}
                             alt="Large User"
                             className="w-10 h-10 rounded-full"
                         />
@@ -113,7 +112,7 @@ const Profile = () => {
                         onClick={handleSignOut}
                         className="text-sm w-full flex gap-2 items-center text-gray-500 dark:text-gray-300 py-1 pl-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"
                     >
-                        <MdLogout/>  Sign Out 
+                        <MdLogout />  Sign Out
                     </button>
                 </div>
             )}

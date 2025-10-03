@@ -34,7 +34,6 @@ const AuthProvider = ({ children }) => {
         return sendPasswordResetEmail(auth, email);
     };
 
-
     //? Update User Pofile:
     const profileUpdate = (currentUser, updatedObg) => {
         setLoading(true);
@@ -57,7 +56,7 @@ const AuthProvider = ({ children }) => {
         return () => {
             unSubscribe();
         };
-    }, []);
+    }, [user]);
 
     const authInfo = {
         loading,

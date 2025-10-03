@@ -138,7 +138,7 @@ const AddBooks = () => {
         </div>
 
         {/* Man Content */}
-        <div className="lg:max-w-3xl lg:mx-auto md:mx-6 mx-auto md:py-14 sm:py-10 py-6 px-6 rounded-md">
+        <div className="lg:max-w-3xl lg:mx-auto md:mx-6 mx-auto md:py-14 sm:py-10 py-6 px-3 sm:px-6 rounded-md">
             <h2 className="text-2xl md:text-4xl text-[var(--color-dark-secondary)] dark:text-[var(--color-light-secondary)] font-semibold mb-6 border-b-2 border-[var(--color-dark-secondary)]  dark:border-[var(--color-light-secondary)] sm:pb-1 pb-[2px]">Add Book</h2>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:gap-4 gap-3">
                 {/* Book Name */}
@@ -171,7 +171,7 @@ const AddBooks = () => {
                             type='url'
                             name='coverImage'
                             placeholder='Enter image URL'
-                            className="w-full border border-gray-300 dark:border-gray-500 focus:outline-none focus:border-2rounded px-3 py-2"
+                            className="w-full border border-gray-300 dark:border-gray-500 focus:outline-none focus:border-2 rounded px-3 py-2"
                         />
                     </div>
 

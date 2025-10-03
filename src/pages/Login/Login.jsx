@@ -9,7 +9,6 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 
-
 const Login = () => {
     const { setUser, signInUser, createGoogleUser, forgotPassword } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
@@ -54,14 +53,15 @@ const Login = () => {
                 navigate(from);
             }, 3000);
         }
+
         // Error handling :
         catch (err) {
             if (err.code === 'auth/invalid-credential') {
-                toast.error('Your email or password is incorrect! Or continue with google.');
+                toast.error('Wrong email or password! Or continue with google.');
             } else if (err.code === 'auth/invalid-email') {
-                toast.error('Please enter your email!');
+                toast.error('Please enter email!');
             } else if (err.code === 'auth/missing-password') {
-                toast.error('Please enter your password!');
+                toast.error('Please enter password!');
             } else {
                 toast.error('Something went wrong. Please try again later!');
             };

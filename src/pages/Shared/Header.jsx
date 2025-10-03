@@ -34,98 +34,170 @@ const Header = () => {
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
 
-    // Navbar links
-    const navLinks = 
-        <>
-            <NavLink
-                to="/"
-                className={({ isActive }) =>
-                    `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
-                        ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
-                        : ''
-                    }`
-                }
-            >
-                Home
-                {location.pathname === '/' ? (
-                    <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-                ) : (
-                    <TiArrowSortedUp className="ml-[2px] text-sm" />
-                )}
-            </NavLink>
-
-            <NavLink
-                to="/all-books"
-                className={({ isActive }) =>
-                    `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
-                        ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
-                        : ''
-                    }`
-                }
-            >
-                All Books
-                {location.pathname === '/all-books' ? (
-                    <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-                ) : (
-                    <TiArrowSortedUp className="ml-[2px] text-sm" />
-                )}
-            </NavLink>
-
-            {
-                user && <>
-                    <NavLink
-                        to="/add-books"
-                        className={({ isActive }) =>
-                            `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
-                                ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
-                                : ''
-                            }`
-                        }
-                    >
-                        Add Books
-                        {location.pathname === '/add-books' ? (
-                            <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-                        ) : (
-                            <TiArrowSortedUp className="ml-[2px] text-sm" />
-                        )}
-                    </NavLink>
-
-                    <NavLink
-                        to="/borrowed-books"
-                        className={({ isActive }) =>
-                            `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
-                                ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
-                                : ''
-                            }`
-                        }
-                    >
-                        Borrowed
-                        {location.pathname === '/borrowed-books' ? (
-                            <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-                        ) : (
-                            <TiArrowSortedUp className="ml-[2px] text-sm" />
-                        )}
-                    </NavLink>
-                </>
+    // Navbar links (unchanged)
+    const navLinks = <>
+        <NavLink
+            to="/"
+            className={({ isActive }) =>
+                `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
+                    ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
+                    : ''
+                }`
             }
+        >
+            Home
+            {location.pathname === '/' ? (
+                <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
+            ) : (
+                <TiArrowSortedUp className="ml-[2px] text-sm" />
+            )}
+        </NavLink>
 
+        <NavLink
+            to="/all-books"
+            className={({ isActive }) =>
+                `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
+                    ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
+                    : ''
+                }`
+            }
+        >
+            All Books
+            {location.pathname === '/all-books' ? (
+                <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
+            ) : (
+                <TiArrowSortedUp className="ml-[2px] text-sm" />
+            )}
+        </NavLink>
+
+        {
+            user && <>
+                <NavLink
+                    to="/add-books"
+                    className={({ isActive }) =>
+                        `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
+                            ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
+                            : ''
+                        }`
+                    }
+                >
+                    Add Books
+                    {location.pathname === '/add-books' ? (
+                        <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
+                    ) : (
+                        <TiArrowSortedUp className="ml-[2px] text-sm" />
+                    )}
+                </NavLink>
+
+                <NavLink
+                    to="/borrowed-books"
+                    className={({ isActive }) =>
+                        `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
+                            ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
+                            : ''
+                        }`
+                    }
+                >
+                    Borrowed
+                    {location.pathname === '/borrowed-books' ? (
+                        <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
+                    ) : (
+                        <TiArrowSortedUp className="ml-[2px] text-sm" />
+                    )}
+                </NavLink>
+            </>
+        }
+        <NavLink
+            to="/blogs"
+            className={({ isActive }) =>
+                `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
+                    ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
+                    : ''
+                }`
+            }
+        >
+            Blogs
+            {location.pathname === '/blogs' ? (
+                <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
+            ) : (
+                <TiArrowSortedUp className="ml-[2px] text-sm" />
+            )}
+        </NavLink>
+    </>;
+
+    const sidebarLinks = <>
+        <NavLink
+            to="/"
+            onClick={() => setIsSidebarOpen(false)}
+            className={({ isActive }) =>
+                `flex items-center justify-between rounded hover:text-[var(--color-primary-orange)]
+      ${isActive ? 'text-[var(--color-primary-orange)]' : ''}`
+            }
+        >
+            <span>Home</span>
+            {location.pathname === '/' ?
+                <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
+                <TiArrowSortedUp className="text-sm" />}
+        </NavLink>
+
+        <NavLink
+            to="/all-books"
+            onClick={() => setIsSidebarOpen(false)}
+            className={({ isActive }) =>
+                `flex items-center justify-between rounded hover:text-[var(--color-primary-orange)]
+      ${isActive ? 'text-[var(--color-primary-orange)]' : ''}`
+            }
+        >
+            <span>All Books</span>
+            {location.pathname === '/all-books' ?
+                <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
+                <TiArrowSortedUp className="text-sm" />}
+        </NavLink>
+
+        {user && <>
             <NavLink
-                to="/blogs"
+                to="/add-books"
+                onClick={() => setIsSidebarOpen(false)}
                 className={({ isActive }) =>
-                    `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
-                        ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
-                        : ''
-                    }`
+                    `flex items-center justify-between rounded hover:text-[var(--color-primary-orange)]
+        ${isActive ? 'text-[var(--color-primary-orange)]' : ''}`
                 }
             >
-                Blogs
-                {location.pathname === '/blogs' ? (
-                    <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-                ) : (
-                    <TiArrowSortedUp className="ml-[2px] text-sm" />
-                )}
+                <span>Add Books</span>
+                {location.pathname === '/add-books' ?
+                    <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
+                    <TiArrowSortedUp className="text-sm" />}
             </NavLink>
-        </>;
+
+            <NavLink
+                to="/borrowed-books"
+                onClick={() => setIsSidebarOpen(false)}
+                className={({ isActive }) =>
+                    `flex items-center justify-between rounded hover:text-[var(--color-primary-orange)]
+        ${isActive ? 'text-[var(--color-primary-orange)]' : ''}`
+                }
+            >
+                <span>Borrowed</span>
+                {location.pathname === '/borrowed-books' ?
+                    <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
+                    <TiArrowSortedUp className="text-sm" />}
+            </NavLink>
+        </>}
+
+        <NavLink
+            to="/blogs"
+            onClick={() => setIsSidebarOpen(false)}
+            className={({ isActive }) =>
+                `flex items-center justify-between rounded hover:text-[var(--color-primary-orange)]
+      ${isActive ? 'text-[var(--color-primary-orange)]' : ''}`
+            }
+        >
+            <span>Blogs</span>
+            {location.pathname === '/blogs' ?
+                <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
+                <TiArrowSortedUp className="text-sm" />}
+        </NavLink>
+    </>;
 
     // useEffect form real current time
     useEffect(() => {
@@ -168,11 +240,11 @@ const Header = () => {
             </div>
 
             {/* Large device Navbar */}
-            <div className='flex justify-between items-center dark:text-[var(--color-light-primary)] text-[var(--color-bg)] max-w-[1600px] mx-auto sm:py-4 py-3 px-4 md:px-10 lg:px-4 xl:px-36'>
+            <div className='flex justify-between items-center dark:text-[var(--color-light-primary)] text-[var(--color-bg)] max-w-[1600px] mx-auto py-4 px-4 md:px-10 lg:px-4 xl:px-36'>
                 {/* Logo */}
                 <Link to="/" className="flex items-center text-xl font-bold">
-                    <img src="/logo.png" alt="Shelfy" className="sm:w-12 sm:h-12 w-8 h-8 sm:mr-0 mr-1" />
-                    <h1 className="sm:text-3xl text-2xl dark:text-[var(--color-light-secondary)] text-[var(--color-dark-secondary)]">
+                    <img src="/logo.png" alt="Shelfy" className="sm:w-12 sm:h-12 w-10 h-10 sm:mr-0 mr-1" />
+                    <h1 className="text-3xl dark:text-[var(--color-light-secondary)] text-[var(--color-dark-secondary)]">
                         Shel<span className="text-[var(--color-primary-orange)] font-bold">fy</span>
                     </h1>
                 </Link>
@@ -182,18 +254,13 @@ const Header = () => {
                     {navLinks}
                 </ul>
 
-                {/* Search + Filters */}
+                {/* Search */}
                 <div className="text-xs flex items-center gap-1 flex-1 justify-end">
                     <div className="hidden lg:flex text-[var(--color-dark-primary)] dark:text-[var(--color-light-primary)] border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full overflow-hidden xl:mr-2 mr-1">
-                        <select className="px-4 py-[11px] bg-white dark:bg-[#333a45] outline-none">
-                            <option>Category</option>
-                            <option>History</option>
-                            <option>Sci-fi</option>
-                        </select>
                         <input
                             type="text"
                             placeholder="Author"
-                            className="px-3 py-2 outline-none w-30 xl:w-40 bg-white dark:bg-[#333a45]"
+                            className="px-3 py-2.5 outline-none w-46 bg-white dark:bg-[#333a45]"
                         />
                         <button className="px-3 py-2 transition rounded-r-full bg-white dark:bg-[#333a45]">
                             <FiSearch size={14} />
@@ -205,10 +272,10 @@ const Header = () => {
                         <input type="checkbox" onChange={toggleTheme} checked={theme === 'dark'} />
 
                         {/* sun icon */}
-                        <IoIosSunny className="swap-off fill-orange-400 text-[29px] sm:text-[33px] p-[7px] sm:p-2 border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full transition duration-500" />
+                        <IoIosSunny className="swap-off fill-orange-400 text-[33px] p-[7px] sm:p-2 border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full transition duration-500" />
 
                         {/* moon icon */}
-                        <IoIosMoon className="swap-on fill-blue-200 text-[29px] sm:text-[33px] p-[7px] sm:p-2 border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full transition duration-500" />
+                        <IoIosMoon className="swap-on fill-blue-200 text-[33px] p-[7px] sm:p-2 border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full transition duration-500" />
                     </label>
 
                     {/* Conditional Profile Info */}
@@ -219,7 +286,7 @@ const Header = () => {
                     {/* small or medium devices Navbar */}
                     <button
                         onClick={() => setIsSidebarOpen(true)}
-                        className="text-[12px] sm:text-xl p-[6.5px] sm:p-[9px] dark:text-white border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full  hover:bg-[var(--color-primary-orange)]  hover:text-white font-bold transition duration-500"
+                        className="text-xl p-[8.5px] dark:text-white border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full  hover:bg-[var(--color-primary-orange)]  hover:text-white font-bold transition duration-500"
                     >
                         <HiMenuAlt3 size={14} />
                     </button>
@@ -228,23 +295,18 @@ const Header = () => {
 
             {/* Side bar  */}
             <div
-                className={`
-                        fixed inset-0 z-50
-                        ${isSidebarOpen ? 'pointer-events-auto bg-black/60 backdrop-blur-xs' : 'pointer-events-none'}
-                    `}
                 onClick={() => setIsSidebarOpen(false)}
+                className={`fixed inset-0 z-50 ${isSidebarOpen ? 'pointer-events-auto bg-black/60 backdrop-blur-xs' : 'pointer-events-none'}`}
             >
                 <div
-                    className={`
-                            absolute top-0 right-0 sm:w-72 w-[280px] h-screen bg-[var(--color-light-accent)] p-3
-                            overflow-y-auto transform transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}
-                        `}
+                    onClick={(e) => e.stopPropagation()}
+                    className={`absolute top-0 right-0 sm:w-72 w-[280px] h-screen bg-[var(--color-light-accent)] p-3 overflow-y-auto transform transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
                 >
                     <div className='flex justify-between items-center pt-[10px] px-[6px]'>
                         {/* Logo */}
                         <Link to="/" className="flex items-center text-xl gap-1 font-bold text-[var(--color-dark-secondary)]">
-                            <img src="/logo.png" alt="Shelfy" className="w-8 h-8" />
-                            <h1 className="text-xl">
+                            <img src="/logo.png" alt="Shelfy" className="w-10 h-10" />
+                            <h1 className="text-2xl">
                                 Shel<span className="text-[var(--color-primary-orange)]">fy</span>
                             </h1>
                         </Link>
@@ -258,12 +320,7 @@ const Header = () => {
                         </button>
                     </div>
 
-                    <div className="text-xs text-black flex border-2 border-blue-100 rounded-full overflow-hidden bg-slate-100 mt-3">
-                        <select className="px-4 py-2 bg-slate-100 outline-none">
-                            <option>Category</option>
-                            <option>Science</option>
-                            <option>Fiction</option>
-                        </select>
+                    <div className="text-xs text-black flex border-2 border-blue-100 rounded-full overflow-hidden bg-slate-100 mt-1">
                         <input
                             type="text"
                             placeholder="Author"
@@ -275,8 +332,8 @@ const Header = () => {
                     </div>
 
                     {/* Sidebar links */}
-                    <ul className="md:hidden flex flex-col gap-1 font-semibold pl-[10px] pr-[18px] pt-4 text-xs text-[#012E4A]">
-                        {navLinks}
+                    <ul className="flex flex-col gap-3.5 font-semibold pl-[10px] pr-[18px] pt-4 text-sm text-[#012E4A]">
+                        {sidebarLinks}
                     </ul>
 
                     {/* Contact Info */}

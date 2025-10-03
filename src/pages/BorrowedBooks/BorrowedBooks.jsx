@@ -109,7 +109,7 @@ const BorrowedBooks = () => {
                 borrowedBooks.length === 0 ?
                     <div className='flex flex-col justify-center items-center gap-2 lg:gap-3'>
                         <p className='text-sm sm:text-2xl lg:text-3xl font-semibold text-orange-500 dark:text-orange-400'>You don't Borrowed any book yet!</p>
-                        <Link to='/'>
+                        <Link to='/all-books'>
                             <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-white g bg-[var(--color-dark-secondary)]  rounded-full transition-all duration-300'>
                                 <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                 <span className='relative z-10'>
