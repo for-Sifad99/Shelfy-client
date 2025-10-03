@@ -5,11 +5,15 @@ import { useEffect, useState } from 'react';
 import Marquee from "react-fast-marquee";
 import avatar from '../../assets/avatarImg/avatar.jpg';
 import { TbListDetails } from "react-icons/tb";
-import { Link } from "react-router";
+import { toast } from 'react-toastify';
+import useAuth from '../../hooks/useAuth';
+import { Link, useNavigate } from "react-router";
 
 const HighRatingBooks = () => {
+    const { user } = useAuth();
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     // Fetch top rating books
     useEffect(() => {
@@ -26,6 +30,17 @@ const HighRatingBooks = () => {
 
         fetchTopRatingBooks();
     }, []);
+
+     const handleDetailsClick = (bookId) => {
+            if (user) {
+                // user logged in → navigate to book details
+                navigate(`/book-details/${bookId}`);
+            } else {
+                // user not logged in → show toast
+                toast.warning('Please login first to view book details!');
+            }
+        };
+    
 
     if (loading) {
         return <div className='flex mx-auto justify-center items-center my-20'><span className="loading loading-spinner loading-xl"></span></div>
@@ -84,15 +99,14 @@ const HighRatingBooks = () => {
                                     <img src={avatar} className='w-6 h-6 rounded-full' alt="Default avatar image" />
                                     {book.authorName}
                                 </div>
-                                <Link to={`/book-details/${book._id}`}>
                                     <button
+                                    onClick={() => handleDetailsClick(book._id)}
                                         className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                         <span className='relative z-10 flex gap-1 items-center'>
                                             <TbListDetails size={12} />View Details
                                         </span>
                                     </button>
-                                </Link>
                             </div>
                         </div>
                     ))}

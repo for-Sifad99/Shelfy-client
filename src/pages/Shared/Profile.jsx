@@ -83,7 +83,7 @@ const Profile = () => {
                 src={user?.photoURL}
                 alt="User"
                 onClick={handleProfileClick}
-                className="sw-[31px] h-[31px] m:w-[34px] sm:h-[34px] md:w-[35px] md:h-[35px] rounded-full border-2 border-[#e0e0e0] dark:border-[#3f3f3f] cursor-pointer"
+                className="sw-[35px] h-[35px] rounded-full border-2 border-[#e0e0e0] dark:border-[#3f3f3f] cursor-pointer"
             />
 
             {/* Modal */}

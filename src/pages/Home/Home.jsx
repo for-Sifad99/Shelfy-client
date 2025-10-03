@@ -23,7 +23,7 @@ const Home = () => {
                 <Banner />
 
                 {/* Info Banner */}
-                <InfoBanner />
+              <InfoBanner />
 
                 {/* Categories */}
                 <Categories />

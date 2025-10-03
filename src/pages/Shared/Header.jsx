@@ -240,7 +240,7 @@ const Header = () => {
             </div>
 
             {/* Large device Navbar */}
-            <div className='flex justify-between items-center dark:text-[var(--color-light-primary)] text-[var(--color-bg)] max-w-[1600px] mx-auto py-4 px-4 md:px-10 lg:px-4 xl:px-36'>
+            <div className='flex justify-between items-center dark:text-[var(--color-light-primary)] text-[var(--color-bg)] max-w-[1600px] mx-auto py-4 px-4 md:px-10 lg:px-4 xl:px-36 shadow-xs'>
                 {/* Logo */}
                 <Link to="/" className="flex items-center text-xl font-bold">
                     <img src="/logo.png" alt="Shelfy" className="sm:w-12 sm:h-12 w-10 h-10 sm:mr-0 mr-1" />
@@ -272,10 +272,10 @@ const Header = () => {
                         <input type="checkbox" onChange={toggleTheme} checked={theme === 'dark'} />
 
                         {/* sun icon */}
-                        <IoIosSunny className="swap-off fill-orange-400 text-[33px] p-[7px] sm:p-2 border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full transition duration-500" />
+                        <IoIosSunny className="swap-off fill-orange-400 text-[34px] p-[7px] sm:p-2 border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full transition duration-500" />
 
                         {/* moon icon */}
-                        <IoIosMoon className="swap-on fill-blue-200 text-[33px] p-[7px] sm:p-2 border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full transition duration-500" />
+                        <IoIosMoon className="swap-on fill-blue-200 text-[34px] p-[7px] sm:p-2 border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full transition duration-500" />
                     </label>
 
                     {/* Conditional Profile Info */}
@@ -286,7 +286,7 @@ const Header = () => {
                     {/* small or medium devices Navbar */}
                     <button
                         onClick={() => setIsSidebarOpen(true)}
-                        className="text-xl p-[8.5px] dark:text-white border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full  hover:bg-[var(--color-primary-orange)]  hover:text-white font-bold transition duration-500"
+                        className="text-xl p-[9px] dark:text-white border border-[#e0e0e0] dark:border-[#3f3f3f] rounded-full  hover:bg-[var(--color-primary-orange)]  hover:text-white font-bold transition duration-500"
                     >
                         <HiMenuAlt3 size={14} />
                     </button>

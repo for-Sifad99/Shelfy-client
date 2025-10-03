@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 import leftBook from '../../assets/commonBanners/leftBook.png';
 import rightBook from '../../assets/commonBanners/rightBook.png';
@@ -8,6 +8,8 @@ import { FaUser } from 'react-icons/fa';
 import { LuTableProperties, LuTableOfContents } from "react-icons/lu";
 import { TbListDetails } from "react-icons/tb";
 import { Rating, Star } from '@smastrom/react-rating';
+import { toast } from 'react-toastify';
+import useAuth from '../../hooks/useAuth';
 import '@smastrom/react-rating/style.css';
 import Loader from '../Shared/Loader';
 import Pagination from '../Shared/Pagination';
@@ -15,14 +17,17 @@ import axios from 'axios';
 
 
 const CategoryBooks = () => {
+    const { user } = useAuth();
     const { category } = useParams();
     const [books, setBooks] = useState([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
     const [view, setView] = useState(() => localStorage.getItem('bookCategoryView') || 'card');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const itemsPerPage = 10;
+
 
     // Fetch paginated books based on category & page
     useEffect(() => {
@@ -53,12 +58,22 @@ const CategoryBooks = () => {
         return true;
     });
 
-
     // Handle view change and save to localStorage
     const handleViewChange = (viewType) => {
         localStorage.setItem('bookCategoryView', viewType);
         setView(viewType);
     };
+
+    const handleDetailsClick = (bookId) => {
+        if (user) {
+            // user logged in → navigate to book details
+            navigate(`/book-details/${bookId}`);
+        } else {
+            // user not logged in → show toast
+            toast.warning('Please login first to view book details!');
+        }
+    };
+
 
     return <>
         {/* Helmet */}
@@ -174,15 +189,14 @@ const CategoryBooks = () => {
                                         <h1 className='dark:text-[#dad5d5] text-xs font-extrabold dark:font-semibold mb-2'>
                                             {book.bookTitle}
                                         </h1>
-                                        <Link to={`/book-details/${book._id}`}>
                                             <button
+                                            onClick={() => handleDetailsClick(book._id)}
                                                 className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                 <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                                 <span className='relative z-10 flex gap-1 items-center'>
                                                     <TbListDetails /> Details
                                                 </span>
                                             </button>
-                                        </Link>
                                     </div>
                                 </div>
                             ))}
@@ -227,15 +241,14 @@ const CategoryBooks = () => {
                                                 <h3 className='bg-gray-200 dark:bg-gray-300 dark:text-black dark:border-[#374151] p-1 rounded'>{book.rating}</h3>
                                             </td>
                                             <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2">
-                                                <Link to={`/book-details/${book._id}`}>
                                                     <button
+                                                    onClick={() => handleDetailsClick(book._id)}
                                                         className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                         <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                                         <span className='relative z-10 flex gap-1 items-center'>
                                                             <TbListDetails /> Details
                                                         </span>
                                                     </button>
-                                                </Link>
                                             </td>
                                         </tr>
                                     ))}
