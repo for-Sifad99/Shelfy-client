@@ -80,11 +80,11 @@ const Footer = () => {
                         </div>
                         <p className="md:text-xs sm:text-lg text-sm opacity-70 mb-3">Sign up with your email address to get the latest updates.</p>
                         <div>
-                            <div className="flex flex-col sm:flex-row gap-3 md:max-w-full sm:max-w-fit max-w-[320px] min-[238px] border border-slate-400 dark:border-gray-600 md:p-1 p-[6px] lg:text-sm md:text-xs sm:text-lg text-sm rounded">
+                            <div className="flex flex-row justify-between gap-3 max-w-[300px] max-w-[340px] border border-slate-400 dark:border-gray-600 md:p-1 p-[6px] lg:text-sm md:text-xs sm:text-lg text-sm rounded">
                                 <input
                                     type="email"
                                     placeholder="Your Email"
-                                    className="p-2 rounded text-white md:w-full focus:outline-none"
+                                    className="p-2 rounded text-white w-full focus:outline-none"
                                 />
                                 <button className='relative overflow-hidden group lg:text-sm md:text-xs sm:text-lg text-sm font-semibold px-[14px] py-[10px] bg-[var(--color-dark-secondary)] text-white rounded'>
                                     <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-700 group-hover:w-full z-0"></span>
@@ -97,7 +97,7 @@ const Footer = () => {
             </div>
             
             {/* Copyright */}
-            <div className="max-w-[1600px] mx-auto mt-6  sm:px-6 md:px-12 lg:px-6 xl:px-38 py-3 bg-[var(--color-dark-secondary)] dark:bg-[var(--color-bg)] flex flex-col md:flex-row justify-between items-center text-xs sm:gap-4 gap-2">
+            <div className="max-w-[1600px] md:mx-auto mt-6 px-4 sm:px-6 md:px-12 lg:px-6 xl:px-38 py-3 bg-[var(--color-dark-secondary)] dark:bg-[var(--color-bg)] flex flex-col md:flex-row md:justify-between md:items-center text-xs sm:gap-4 gap-2">
                 <p>© All Copyrights 2025 | Shelfy</p>
                 <div className="flex sm:gap-3 gap-1">
                     <img src={visa}
