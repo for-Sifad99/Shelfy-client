@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
         return createUserWithEmailAndPassword(auth, email, password);
     };
 
-    //? Create User with Goggle:
+    //? Create User with Google:
     const googleProvider = new GoogleAuthProvider();
 
     const createGoogleUser = () => {
@@ -34,10 +34,10 @@ const AuthProvider = ({ children }) => {
         return sendPasswordResetEmail(auth, email);
     };
 
-    //? Update User Pofile:
-    const profileUpdate = (currentUser, updatedObg) => {
+    //? Update User Profile:
+    const profileUpdate = (currentUser, updatedObj) => {
         setLoading(true);
-        return updateProfile(currentUser, updatedObg);
+        return updateProfile(currentUser, updatedObj);
     };
 
     //? SignOut User:
@@ -56,7 +56,7 @@ const AuthProvider = ({ children }) => {
         return () => {
             unSubscribe();
         };
-    }, [user]);
+    }, []);
 
     const authInfo = {
         loading,

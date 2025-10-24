@@ -25,10 +25,12 @@ import {
 } from 'react-icons/fi';
 import useTheme from '../../hooks/ThemeContext';
 import useAuth from "../../hooks/UseAuth";
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Profile from './Profile';
 
 const Header = () => {
     const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
     const [currentTime, setCurrentTime] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();

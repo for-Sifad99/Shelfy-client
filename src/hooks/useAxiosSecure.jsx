@@ -1,36 +1,53 @@
-import React from 'react';
 import axios from 'axios';
-import useAuth from '../hooks/useAuth';
+import useAuth from './UseAuth';
 
-const axiosInstance = axios.create({
-    baseURL: 'https://shelfy-book-server.vercel.app/'
-});
 const useAxiosSecure = () => {
-    const { user, signOutUser } = useAuth();
+    const { user } = useAuth();
+
+    const axiosInstance = axios.create({
+        baseURL: `${import.meta.env.VITE_server_url}/api/`
+    });
 
     // request interceptor
-    axiosInstance.interceptors.request.use(config => {
-        if (user?.accessToken) {
-            config.headers.Authorization = `Bearer ${user.accessToken}`;
-        };
-        return config;
-    });
-
-    // response interceptor 
-    axiosInstance.interceptors.response.use(response => {
-        return response;
-    }, error => {
-        if (error.status === 401) {
-            signOutUser()
-                .then(() => {
-                    console.log('Sign out user for 401 status code!');
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+    axiosInstance.interceptors.request.use(async (config) => {
+        if (user) {
+            try {
+                // Get ID token without force refresh to avoid quota issues
+                const token = await user.getIdToken(false);
+                if (token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+            } catch (error) {
+                console.error('Error getting Firebase ID token:', error);
+                // If we get a quota error, try again with force refresh
+                if (error.code === 'auth/quota-exceeded') {
+                    try {
+                        const token = await user.getIdToken(true);
+                        if (token) {
+                            config.headers.Authorization = `Bearer ${token}`;
+                        }
+                    } catch (refreshError) {
+                        console.error('Error force refreshing Firebase ID token:', refreshError);
+                    }
+                }
+            }
         }
+        return config;
+    }, (error) => {
         return Promise.reject(error);
     });
+
+    // response interceptor
+    axiosInstance.interceptors.response.use(
+        (response) => response,
+        async (error) => {
+            if (error.response?.status === 401) {
+                // Handle 401 errors if needed
+                console.error('Unauthorized access - token may be expired');
+            }
+            return Promise.reject(error);
+        }
+    );
 
     return axiosInstance;
 };

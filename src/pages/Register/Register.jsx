@@ -7,11 +7,13 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/UseAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 const Register = () => {
-    const { setUser, createUser, createGoogleUser, profileUpdate, signOutUser } = useAuth();
+    const { setUser, createUser: createAuthUser, createGoogleUser, profileUpdate, signOutUser } = useAuth();
+    const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState();
@@ -21,12 +23,11 @@ const Register = () => {
 
         // Form data:
         const form = e.target;
-        const name = e.target.name.value;
+        const name = form.name.value;
         const photo = form.photo.value;
         const email = form.email.value;
         const password = form.password.value;
         const checkbox = form.checkbox.checked;
-        // console.log(name, photo, email, password, checkbox);
 
         // empty validation
         if (!name || !photo || !email || !password) {
@@ -46,15 +47,18 @@ const Register = () => {
 
         //? Create User:
         try {
-            const currentUser = await createUser(email, password);
+            const userCredential = await createAuthUser(email, password);
+            const currentUser = userCredential.user;
 
             // ✅ Update displayName and photoURL
-            profileUpdate(currentUser.user, {
+            await profileUpdate(currentUser, {
                 displayName: name,
                 photoURL: photo
             });
-            setUser(currentUser.user);
-
+            
+            // Set user in context
+            setUser(currentUser);
+            
             // Sweet Alert:
             const Toast = Swal.mixin({
                 toast: true,
@@ -79,6 +83,7 @@ const Register = () => {
         }
         // Error handling :
         catch (err) {
+            console.error('Registration error:', err);
             toast.error(`Registration failed: ${err.message}`);
         };
     };
@@ -86,9 +91,12 @@ const Register = () => {
     const handleGoogleUser = async () => {
         //? Create User with Google:
         try {
-            const currentUser = await createGoogleUser();
-            setUser(currentUser.user);
-
+            const userCredential = await createGoogleUser();
+            const currentUser = userCredential.user;
+            
+            // Set user in context
+            setUser(currentUser);
+            
             // Sweet Alert :
             const Toast = Swal.mixin({
                 toast: true,
@@ -113,6 +121,7 @@ const Register = () => {
         }
         // Error handling :
         catch (err) {
+            console.error('Google registration error:', err);
             toast.error(`Registration failed: ${err.message}`);
         };
     };
@@ -187,6 +196,7 @@ const Register = () => {
                                     name='name'
                                     placeholder="Full Name"
                                     className="w-full dark:text-gray-300 border-b border-gray-300 dark:border-slate-400 focus:outline-none focus:border-blue-600 dark:focus:border-blue-400 py-1 mt-1 placeholder-gray-500 dark:placeholder-gray-400"
+                                    required
                                 />
                             </div>
 
@@ -197,6 +207,7 @@ const Register = () => {
                                     name='photo'
                                     placeholder="Photo URL"
                                     className="w-full dark:text-gray-300 border-b border-gray-300 dark:border-slate-400 focus:outline-none focus:border-blue-600 dark:focus:border-blue-400 py-1 mt-1 placeholder-gray-500 dark:placeholder-gray-400"
+                                    required
                                 />
                             </div>
 
@@ -207,6 +218,7 @@ const Register = () => {
                                     name='email'
                                     placeholder="Email Address"
                                     className="w-full dark:text-gray-300 border-b border-gray-300 dark:border-slate-400 focus:outline-none focus:border-blue-600 dark:focus:border-blue-400 py-1 mt-1 placeholder-gray-500 dark:placeholder-gray-400"
+                                    required
                                 />
                             </div>
 
@@ -217,6 +229,7 @@ const Register = () => {
                                     name='password'
                                     placeholder="Password"
                                     className="w-full dark:text-gray-300 border-b border-gray-300 dark:border-slate-400 focus:outline-none focus:border-blue-600 dark:focus:border-blue-400 py-1 mt-1 placeholder-gray-500 dark:placeholder-gray-400"
+                                    required
                                 />
                                 <span
                                     className="absolute right-3 top-2.5 text-gray-500 dark:text-gray-300 cursor-pointer"
@@ -234,7 +247,7 @@ const Register = () => {
 
                             {/* Terms */}
                             <label className="flex items-center text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                <input type="checkbox" name='checkbox' className="mr-2" />
+                                <input type="checkbox" name='checkbox' className="mr-2" required />
                                 I Accept Terms & Conditions
                             </label>
 

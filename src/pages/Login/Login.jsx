@@ -7,10 +7,12 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/UseAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Login = () => {
     const { setUser, signInUser, createGoogleUser, forgotPassword } = useAuth();
+    const axiosSecure = useAxiosSecure();
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const emailRef = useRef();
@@ -24,34 +26,28 @@ const Login = () => {
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
-        // console.log(email, password);
 
         //? SignIn User:
         try {
-            const user = await signInUser(email, password);
-            const currentUser = user;
+            const userCredential = await signInUser(email, password);
+            const currentUser = userCredential.user;
 
-            // Sweet Alert :
-            const Toast = Swal.mixin({
+            // Success notification
+            Swal.fire({
                 toast: true,
                 position: "top-end",
                 showConfirmButton: false,
                 timer: 3000,
                 timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
                 icon: "success",
                 title: "Logged in successfully!!"
             });
 
+            setUser(currentUser);
+            // Use a slightly longer delay to ensure state is set
             setTimeout(() => {
-                setUser(currentUser);
                 navigate(from);
-            }, 3000);
+            }, 300);
         }
 
         // Error handling :
@@ -70,30 +66,29 @@ const Login = () => {
 
     const handleGoogleLogin = async () => {
         //? Login User with Google:
-        const user = await createGoogleUser();
-        const currentUser = user;
+        try {
+            const userCredential = await createGoogleUser();
+            const currentUser = userCredential.user;
+            
+            // Success notification
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                icon: "success",
+                title: "Logged in successfully!!"
+            });
 
-        // Sweet Alert :
-        const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        });
-        Toast.fire({
-            icon: "success",
-            title: "Logged in successfully!!"
-        });
-
-        setTimeout(() => {
             setUser(currentUser);
-            navigate(from);
-        }, 3000);
+            // Use a slightly longer delay to ensure state is set
+            setTimeout(() => {
+                navigate(from);
+            }, 300);
+        } catch (err) {
+            toast.error(`Login failed: ${err.message}`);
+        }
     };
 
     const handleForgotPassword = async () => {
@@ -101,19 +96,12 @@ const Login = () => {
 
         // Empty email check :
         if (!email) {
-            // Sweet Alert :
-            const Toast = Swal.mixin({
+            Swal.fire({
                 toast: true,
                 position: "top-end",
                 showConfirmButton: false,
                 timer: 3000,
                 timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
                 icon: "warning",
                 title: "Please! enter your email first."
             });
@@ -122,19 +110,12 @@ const Login = () => {
             //? Reset Password:
             await forgotPassword(email);
 
-            // Sweet Alert :
-            const Toast = Swal.mixin({
+            Swal.fire({
                 toast: true,
                 position: "top-end",
                 showConfirmButton: false,
                 timer: 3000,
                 timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
                 icon: "success",
                 title: "Done! Please check your email."
             });
@@ -211,6 +192,7 @@ const Login = () => {
                                     name='email'
                                     placeholder="Email Address"
                                     className="w-full dark:text-gray-300 border-b border-gray-300 dark:border-slate-400 focus:outline-none focus:border-blue-600 dark:focus:border-blue-400 py-1 mt-1 placeholder-gray-500 dark:placeholder-gray-400"
+                                    required
                                 />
                             </div>
 
@@ -221,6 +203,7 @@ const Login = () => {
                                     name='password'
                                     placeholder="Password"
                                     className="w-full dark:text-gray-300 border-b border-gray-300 dark:border-slate-400 focus:outline-none focus:border-blue-600 dark:focus:border-blue-400 py-1 mt-1 placeholder-gray-500 dark:placeholder-gray-400"
+                                    required
                                 />
                                 <span
                                     className="absolute right-3 top-2.5 text-gray-500 dark:text-gray-300 cursor-pointer"
@@ -270,6 +253,6 @@ const Login = () => {
                 </div>
             </div>
         </section>
-    </>
+    </>;
 };
 export default Login;

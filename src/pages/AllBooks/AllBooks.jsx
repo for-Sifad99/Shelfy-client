@@ -10,7 +10,7 @@ import { FaUser } from 'react-icons/fa';
 import { LuTableProperties, LuTableOfContents } from "react-icons/lu";
 import { MdTipsAndUpdates } from "react-icons/md";
 import { toast } from 'react-toastify';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../hooks/UseAuth';
 import Loader from '../Shared/Loader';
 import Pagination from '../Shared/Pagination';
 import axios from 'axios';
@@ -31,7 +31,12 @@ const AllBooks = () => {
     useEffect(() => {
         const fetchCategoryBooks = async () => {
             try {
-                const res = await axios.get(`https://shelfy-book-server.vercel.app/allBooks?page=${currentPage}&limit=${itemsPerPage}`);
+                // Create axios instance with base URL
+                const axiosInstance = axios.create({
+                    baseURL: import.meta.env.VITE_server_url
+                });
+                
+                const res = await axiosInstance.get(`/api/allBooks?page=${currentPage}&limit=${itemsPerPage}`);
                 setBooks(res.data.books);
                 setTotalPages(res.data.totalPages);
             } catch (error) {

@@ -19,7 +19,12 @@ const UpdateBook = () => {
 
     // Fetch book info by Id
     useEffect(() => {
-        axios.get(`https://shelfy-book-server.vercel.app/allBooks/${id}`)
+        // Create axios instance with base URL
+        const axiosInstance = axios.create({
+            baseURL: import.meta.env.VITE_server_url
+        });
+        
+        axiosInstance.get(`/api/allBooks/${id}`)
             .then(res => {
                 setBookInfo(res.data);
                 setSelectedCategory(res.data.category || '');

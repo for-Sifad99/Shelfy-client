@@ -12,7 +12,7 @@ import '@smastrom/react-rating/style.css';
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import axios from "axios";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/UseAuth";
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { patchBook } from '../../api/bookApis';
 
@@ -26,7 +26,12 @@ const BookDetails = () => {
     const [returnDate, setReturnDate] = useState("");
 
     useEffect(() => {
-        axios.get(`https://shelfy-book-server.vercel.app/allBooks/${id}`)
+        // Create axios instance with base URL
+        const axiosInstance = axios.create({
+            baseURL: import.meta.env.VITE_server_url
+        });
+        
+        axiosInstance.get(`/api/allBooks/${id}`)
             .then(res => setBook(res.data))
             .catch(err => console.error("Failed to fetch book info", err));
     }, [id]);
@@ -54,7 +59,12 @@ const BookDetails = () => {
         }
         try {
             // 1. Borrow info save
-            await axios.post('https://shelfy-book-server.vercel.app/addBorrowedBookInfo', borrowedData);
+            // Create axios instance with base URL
+            const axiosInstance = axios.create({
+                baseURL: import.meta.env.VITE_server_url
+            });
+            
+            await axiosInstance.post(`/api/addBorrowedBookInfo`, borrowedData);
 
             // 2. Quantity decrease in DB
             await patchBook(axiosSecure, id, {

@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from 'react-router';
 import { MdLogout } from "react-icons/md";
 import Swal from "sweetalert2";
-import useAuth from '../../hooks/useAuth';
-
+import useAuth from '../../hooks/UseAuth';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const Profile = () => {
     const { signOutUser, user } = useAuth();
+    const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [clickedOpen, setClickedOpen] = useState(false); // track click
@@ -14,7 +15,6 @@ const Profile = () => {
     const profileRef = useRef(null);
 
     const handleSignOut = async () => {
-        // Sweet Alert:
         Swal.fire({
             title: "Are you sure?",
             text: "You want to logout!",
@@ -71,6 +71,30 @@ const Profile = () => {
         setIsOpen(!clickedOpen);
     };
 
+    // Get user display name
+    const getUserDisplayName = () => {
+        if (user) {
+            return user.displayName || user.email || "User";
+        }
+        return "User";
+    };
+
+    // Get user email
+    const getUserEmail = () => {
+        if (user && user.email) {
+            return user.email;
+        }
+        return "User Email";
+    };
+
+    // Get user photo URL
+    const getUserPhotoURL = () => {
+        if (user && user.photoURL) {
+            return user.photoURL;
+        }
+        return '/default-profile.png';
+    };
+
     return (
         <div
             className="relative"
@@ -80,10 +104,10 @@ const Profile = () => {
             {/* Profile Picture */}
             <img
                 ref={profileRef}
-                src={user?.photoURL}
+                src={getUserPhotoURL()}
                 alt="User"
                 onClick={handleProfileClick}
-                className="sw-[35px] h-[35px] rounded-full border-2 border-[#e0e0e0] dark:border-[#3f3f3f] cursor-pointer"
+                className="w-[35px] h-[35px] rounded-full border-2 border-[#e0e0e0] dark:border-[#3f3f3f] cursor-pointer"
             />
 
             {/* Modal */}
@@ -94,20 +118,21 @@ const Profile = () => {
                 >
                     <div className="flex items-center gap-2">
                         <img
-                            src={user?.photoURL}
+                            src={getUserPhotoURL()}
                             alt="Large User"
                             className="w-10 h-10 rounded-full"
                         />
                         <div>
                             <h2 className="text-base font-semibold text-[var(--color-dark-primary)] dark:text-white">
-                                {user?.displayName || "User Name"}
+                                {getUserDisplayName()}
                             </h2>
                             <h2 className="text-xs text-gray-600 dark:text-gray-300">
-                                {user?.email || "User Email"}
+                                {getUserEmail()}
                             </h2>
                         </div>
                     </div>
                     <hr className="text-gray-300 dark:text-gray-600 mt-3 mb-2" />
+                    
                     <button
                         onClick={handleSignOut}
                         className="text-sm w-full flex gap-2 items-center text-gray-500 dark:text-gray-300 py-1 pl-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"
