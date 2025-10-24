@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import { FaArrowRight, FaHourglassStart, FaUser } from 'react-icons/fa6';
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { IoIosSunny, IoIosMoon } from "react-icons/io";
@@ -35,8 +35,12 @@ const Header = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
+    const navigate = useNavigate();
 
-    // Navbar links (unchanged)
+    // Check if user needs email verification
+    const needsEmailVerification = user && !user.emailVerified && user.providerData[0].providerId === 'password';
+
+    // Navbar links
     const navLinks = <>
         <NavLink
             to="/"
@@ -73,7 +77,7 @@ const Header = () => {
         </NavLink>
 
         {
-            user && <>
+            user && !needsEmailVerification && <>
                 <NavLink
                     to="/add-books"
                     className={({ isActive }) =>
@@ -156,7 +160,7 @@ const Header = () => {
                 <TiArrowSortedUp className="text-sm" />}
         </NavLink>
 
-        {user && <>
+        {user && !needsEmailVerification && <>
             <NavLink
                 to="/add-books"
                 onClick={() => setIsSidebarOpen(false)}
@@ -361,19 +365,34 @@ const Header = () => {
 
                         {/* Conditional Login, Register and Explore Books button */}
                         {
-                            user ? <div className='mt-2 mb-1'>
-                                <Link to='/all-books'>
-                                    <button
-                                        onClick={() => setIsSidebarOpen(false)}
-                                        className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
-                                        <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
-                                        <span className='relative z-10 flex gap-1 items-center'>
-                                            Explore Books<FaArrowRight />
-                                        </span>
-                                    </button>
-                                </Link>
-                            </div>
-                                : <div className='flex flex-col gap-1 mt-2 mb-1'>
+                            user ? (
+                                needsEmailVerification ? (
+                                    <div className='mt-2 mb-1'>
+                                        <button
+                                            onClick={() => navigate('/email-verification')}
+                                            className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
+                                            <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                                            <span className='relative z-10 flex gap-1 items-center'>
+                                                Verify Email
+                                            </span>
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className='mt-2 mb-1'>
+                                        <Link to='/all-books'>
+                                            <button
+                                                onClick={() => setIsSidebarOpen(false)}
+                                                className='relative overflow-hidden group text-xs font-semibold px-6 py-[10px] w-full flex justify-center bg-[var(--color-dark-secondary)] text-white rounded-full'>
+                                                <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
+                                                <span className='relative z-10 flex gap-1 items-center'>
+                                                    Explore Books<FaArrowRight />
+                                                </span>
+                                            </button>
+                                        </Link>
+                                    </div>
+                                )
+                            ) : (
+                                <div className='flex flex-col gap-1 mt-2 mb-1'>
                                     <Link to='/login'>
                                         <button
                                             onClick={() => setIsSidebarOpen(false)}
@@ -395,6 +414,7 @@ const Header = () => {
                                         </button>
                                     </Link>
                                 </div>
+                            )
                         }
 
                         <div className="flex text-xs">

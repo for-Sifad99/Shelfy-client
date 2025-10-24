@@ -14,6 +14,7 @@ import BookDetails from '../pages/BookDetails/BookDetails';
 import UpdateBook from '../pages/UpdateBook/UpdateBook';
 import Register from '../pages/Register/Register';
 import Login from '../pages/Login/Login';
+import EmailVerification from '../pages/EmailVerification/EmailVerification';
 import ErrorPage from '../pages/ErrorPage/ErrorPage';
 
 const router = createBrowserRouter([
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
             {
                 path: '/login',
                 Component: Login
+            },
+            {
+                path: '/email-verification',
+                Component: EmailVerification
             },
         ]
     },

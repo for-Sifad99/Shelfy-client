@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from 'react-router';
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdEmail } from "react-icons/md";
 import Swal from "sweetalert2";
 import useAuth from '../../hooks/UseAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
@@ -13,6 +13,9 @@ const Profile = () => {
     const [clickedOpen, setClickedOpen] = useState(false); // track click
     const modalRef = useRef(null);
     const profileRef = useRef(null);
+
+    // Check if user needs email verification
+    const needsEmailVerification = user && !user.emailVerified && user.providerData[0].providerId === 'password';
 
     const handleSignOut = async () => {
         Swal.fire({
@@ -34,6 +37,12 @@ const Profile = () => {
                 });
             };
         });
+    };
+
+    const handleVerifyEmail = () => {
+        navigate('/email-verification');
+        setIsOpen(false);
+        setClickedOpen(false);
     };
 
     // Close modal when clicking outside
@@ -131,6 +140,23 @@ const Profile = () => {
                             </h2>
                         </div>
                     </div>
+                    
+                    {/* Email verification warning */}
+                    {needsEmailVerification && (
+                        <div className="mt-2 p-2 bg-yellow-100 dark:bg-yellow-900 rounded text-xs text-yellow-800 dark:text-yellow-200">
+                            <div className="flex items-center">
+                                <MdEmail className="mr-1" />
+                                <span>Email not verified</span>
+                            </div>
+                            <button 
+                                onClick={handleVerifyEmail}
+                                className="mt-1 text-blue-600 dark:text-blue-300 hover:underline"
+                            >
+                                Verify now
+                            </button>
+                        </div>
+                    )}
+                    
                     <hr className="text-gray-300 dark:text-gray-600 mt-3 mb-2" />
                     
                     <button
