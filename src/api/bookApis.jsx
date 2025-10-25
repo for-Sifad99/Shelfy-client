@@ -33,6 +33,12 @@ const getBooksByUser = async (axiosSecure, email, page, limit) => {
     return res.data;
 };
 
+// Get books statistics for admin dashboard
+const getBooksStatistics = async (axiosInstance) => {
+    const res = await axiosInstance.get('/booksStatistics');
+    return res.data;
+};
+
 // Get a single book by ID
 const getBookById = async (axiosInstance, id) => {
     const res = await axiosInstance.get(`/allBooks/${id}`);
@@ -68,6 +74,7 @@ export {
     patchBook, 
     getAllBooks, 
     getBooksByUser,
+    getBooksStatistics,
     getBookById, 
     getTopRatingBooks, 
     addBorrowedBookInfo, 
