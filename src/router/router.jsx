@@ -20,6 +20,8 @@ import EmailVerification from '../pages/EmailVerification/EmailVerification';
 import ErrorPage from '../pages/ErrorPage/ErrorPage';
 import AdminDashboardLayout from '../layouts/AdminDashboardLayout';
 import AdminDashboard from '../pages/AdminDashboard/AdminDashboard';
+import Settings from '../pages/AdminDashboard/Settings';
+import Profile from '../pages/AdminDashboard/Profile';
 
 const router = createBrowserRouter([
     {
@@ -97,8 +99,12 @@ const router = createBrowserRouter([
                 element: <div>Reports Page</div>
             },
             {
+                path: 'profile',
+                element: <Profile />
+            },
+            {
                 path: 'settings',
-                element: <div>Settings Page</div>
+                element: <Settings />
             }
         ]
     },
