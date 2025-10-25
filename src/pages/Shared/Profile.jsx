@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, Link } from 'react-router';
+import { useNavigate } from 'react-router';
 import { MdLogout, MdEmail, MdDashboard } from "react-icons/md";
-import Swal from "sweetalert2";
 import useAuth from '../../hooks/UseAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { getUserByEmail } from '../../api/userApis';
+import avatar from '../../assets/avatarImg/avatar.jpg';
+import Swal from "sweetalert2";
+import { useUserCreation } from '../../contexts/UserCreationContext';
 
+// Shared profile component for header navigation
 const Profile = () => {
     const { signOutUser, user } = useAuth();
+    const { userCreationStatus } = useUserCreation();
     const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
@@ -17,24 +21,67 @@ const Profile = () => {
     const profileRef = useRef(null);
 
     // Check if user needs email verification
-    const needsEmailVerification = user && !user.emailVerified && user.providerData[0].providerId === 'password';
+    const needsEmailVerification = user && !user.emailVerified && user.providerData[0]?.providerId === 'password';
 
     // Check if user is admin
     useEffect(() => {
         const checkAdminStatus = async () => {
-            if (user?.email) {
+            // Only check admin status if we have a user and they've been created in the database
+            if (user?.email && userCreationStatus.isCreated && userCreationStatus.userEmail === user.email) {
+                console.log('Checking admin status for user:', user.email);
                 try {
+                    // Always check the database for the current user's role
                     const userData = await getUserByEmail(axiosSecure, user.email);
-                    setIsAdmin(userData.role === 'admin');
+                    console.log('User data retrieved:', userData);
+                    const isAdminUser = userData.role === 'admin';
+                    setIsAdmin(isAdminUser);
+                    
+                    // If user was admin but is now user, redirect to user dashboard
+                    if (!isAdminUser && window.location.pathname.includes('/admin-dashboard')) {
+                        navigate('/user-dashboard');
+                    }
+                    
+                    // If user was user but is now admin, redirect to admin dashboard
+                    if (isAdminUser && window.location.pathname.includes('/user-dashboard') && !window.location.pathname.includes('/admin-dashboard')) {
+                        navigate('/admin-dashboard');
+                    }
                 } catch (error) {
-                    console.error('Error checking admin status:', error);
-                    setIsAdmin(false);
+                    console.error('Error checking user role:', error);
+                    // If user not found (404), this means they exist in Firebase but not in our database
+                    if (error.response?.status === 404) {
+                        // User not found in database
+                        // This could happen if user was manually added to Firebase or creation failed
+                        // In this case, we should redirect them to register or handle appropriately
+                        console.log('User not found in database, assuming regular user');
+                        setIsAdmin(false);
+                    } else {
+                        // For other errors, assume not admin for security
+                        setIsAdmin(false);
+                    }
                 }
+            } else {
+                // No user or user not yet created in database, reset admin status
+                setIsAdmin(false);
             }
         };
 
         checkAdminStatus();
-    }, [user, axiosSecure]);
+        
+        // Also check periodically to catch role changes
+        const interval = setInterval(checkAdminStatus, 2000); // Check every 2 seconds for faster updates
+        
+        // Listen for role change events
+        const handleRoleChange = () => {
+            checkAdminStatus();
+        };
+        
+        window.addEventListener('roleChange', handleRoleChange);
+        
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('roleChange', handleRoleChange);
+        };
+    }, [user, axiosSecure, userCreationStatus, navigate]);
 
     const handleSignOut = async () => {
         Swal.fire({
@@ -66,6 +113,12 @@ const Profile = () => {
 
     const handleAdminDashboard = () => {
         navigate('/admin-dashboard');
+        setIsOpen(false);
+        setClickedOpen(false);
+    };
+
+    const handleUserDashboard = () => {
+        navigate('/user-dashboard');
         setIsOpen(false);
         setClickedOpen(false);
     };
@@ -121,12 +174,17 @@ const Profile = () => {
         return "User Email";
     };
 
-    // Get user photo URL
+    // Get user photo URL with fallback for broken images
     const getUserPhotoURL = () => {
         if (user && user.photoURL) {
             return user.photoURL;
         }
-        return '/default-profile.png';
+        return avatar;
+    };
+
+    // Handle broken image URLs by falling back to default avatar
+    const handleImageError = (e) => {
+        e.target.src = avatar;
     };
 
     return (
@@ -141,6 +199,7 @@ const Profile = () => {
                 src={getUserPhotoURL()}
                 alt="User"
                 onClick={handleProfileClick}
+                onError={handleImageError}
                 className="w-[35px] h-[35px] rounded-full border-2 border-[#e0e0e0] dark:border-[#3f3f3f] cursor-pointer"
             />
 
@@ -154,6 +213,7 @@ const Profile = () => {
                         <img
                             src={getUserPhotoURL()}
                             alt="Large User"
+                            onError={handleImageError}
                             className="w-10 h-10 rounded-full"
                         />
                         <div>
@@ -184,13 +244,13 @@ const Profile = () => {
                     
                     <hr className="text-gray-300 dark:text-gray-600 mt-3 mb-2" />
                     
-                    {/* Admin Dashboard Link */}
-                    {isAdmin && (
+                    {/* Dashboard Link */}
+                    {user && (
                         <button
-                            onClick={handleAdminDashboard}
+                            onClick={isAdmin ? handleAdminDashboard : handleUserDashboard}
                             className="text-sm w-full flex gap-2 items-center text-gray-500 dark:text-gray-300 py-1 pl-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"
                         >
-                            <MdDashboard /> Admin Dashboard
+                            <MdDashboard /> {isAdmin ? 'Admin Dashboard' : 'User Dashboard'}
                         </button>
                     )}
                     

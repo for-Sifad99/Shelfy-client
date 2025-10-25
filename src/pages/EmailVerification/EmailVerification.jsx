@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/UseAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { getFirebaseErrorMessage, isTooManyRequestsError } from "../../utils/firebaseErrorUtils";
 
 const EmailVerification = () => {
     const { user, sendVerificationEmail, signOutUser } = useAuth();
@@ -73,7 +74,7 @@ const EmailVerification = () => {
                     console.warn('Failed to set item in localStorage for key: lastVerificationEmailSent', error);
                 }
                 
-                // Success notification with spam folder advice
+                // Success notification
                 Swal.fire({
                     toast: true,
                     position: "top-end",
@@ -87,28 +88,15 @@ const EmailVerification = () => {
             } catch (error) {
                 console.error("Error sending verification email:", error);
                 
-                // More user-friendly error messages
                 if (error.message.includes('wait')) {
                     toast.warning(error.message);
-                } else if (error && typeof error === 'object' && 
-                    (error.code === 'auth/too-many-requests' ||
-                     (error.message && error.message.includes('too many requests')) ||
-                     (error.response && error.response.status === 429))) {
+                } else if (isTooManyRequestsError(error)) {
                     toast.error("Too many requests. Please wait a while before requesting another verification email.");
                     // Set a longer cooldown
                     setCooldown(300); // 5 minutes
                 } else {
-                    // Provide helpful advice for spam folder issues
-                    Swal.fire({
-                        icon: "info",
-                        title: "Email Sent Successfully",
-                        html: `
-                            <p>The verification email has been sent to <strong>${user.email}</strong>.</p>
-                            <p class="mt-2"><strong>Please check your spam/junk folder</strong> if you don't see it in your inbox.</p>
-                            <p class="mt-2">Tip: Add <strong>noreply@shelfy.com</strong> to your contacts to prevent future emails from going to spam.</p>
-                        `,
-                        confirmButtonText: "OK"
-                    });
+                    const errorMessage = getFirebaseErrorMessage(error);
+                    toast.error(errorMessage);
                 }
             } finally {
                 setLoading(false);

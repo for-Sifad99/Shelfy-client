@@ -5,50 +5,51 @@ import useAxiosSecure from '../hooks/useAxiosSecure';
 import { getUserByEmail } from '../api/userApis';
 import Loader from '../pages/Shared/Loader';
 
-// Admin route component to protect admin-only routes with enhanced security
-const AdminRoute = ({ children }) => {
+// User route component to protect user-only routes with enhanced security
+const UserRoute = ({ children }) => {
     const { user, loading } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const [isAdmin, setIsAdmin] = React.useState(false);
-    const [isAdminLoading, setIsAdminLoading] = React.useState(true);
+    const [isUser, setIsUser] = React.useState(false);
+    const [isUserLoading, setIsUserLoading] = React.useState(true);
     const location = useLocation();
 
     React.useEffect(() => {
         // If user is null and loading is false, we can determine the user is not logged in
         if (!user && !loading) {
-            setIsAdminLoading(false);
+            setIsUserLoading(false);
             return;
         }
 
-        const checkAdminStatus = async () => {
+        const checkUserRole = async () => {
             if (user?.email) {
                 try {
                     const userData = await getUserByEmail(axiosSecure, user.email);
-                    setIsAdmin(userData.role === 'admin');
+                    // Regular users have role 'user' or undefined (for legacy users)
+                    setIsUser(userData.role === 'user' || userData.role === undefined);
                 } catch (error) {
-                    console.error('Error checking admin status:', error);
-                    // If user not found (404), they're not an admin
+                    console.error('Error checking user role:', error);
+                    // If user not found (404), they're not a regular user
                     if (error.response?.status === 404) {
-                        setIsAdmin(false);
+                        setIsUser(false);
                     } else {
-                        // For other errors, assume not admin for security (fail-safe approach)
-                        setIsAdmin(false);
+                        // For other errors, assume not a regular user for security (fail-safe approach)
+                        setIsUser(false);
                     }
                 } finally {
-                    setIsAdminLoading(false);
+                    setIsUserLoading(false);
                 }
             } else {
-                setIsAdminLoading(false);
+                setIsUserLoading(false);
             }
         };
 
         if (user && !loading) {
-            checkAdminStatus();
+            checkUserRole();
         }
     }, [user, loading, axiosSecure]);
 
     // Show loader while checking auth status
-    if (loading || isAdminLoading) {
+    if (loading || isUserLoading) {
         return <Loader />;
     }
 
@@ -57,13 +58,13 @@ const AdminRoute = ({ children }) => {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    // If user is not admin, redirect to home for security (fail-safe approach)
-    if (!isAdmin) {
-        return <Navigate to="/" replace />;
+    // If user is admin, redirect to admin dashboard (prevent admin access to user routes)
+    if (!isUser) {
+        return <Navigate to="/admin-dashboard" replace />;
     }
 
-    // If user is admin, render the children
+    // If user is a regular user, render the children
     return children;
 };
 
-export default AdminRoute;
+export default UserRoute;

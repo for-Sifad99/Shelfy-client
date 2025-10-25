@@ -9,11 +9,14 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/UseAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { createUser as createDbUser } from "../../api/userApis";
-import { getUserByEmail } from "../../api/userApis";
+import { getUserByEmail, createUser as createDbUser } from "../../api/userApis";
+import { useUserCreation } from "../../contexts/UserCreationContext";
+import { getFirebaseErrorMessage } from "../../utils/firebaseErrorUtils";
 
+// Login component with enhanced authentication flow
 const Login = () => {
-    const { setUser, signInUser, createGoogleUser, forgotPassword } = useAuth();
+    const { setUser, signInUser, createGoogleUser, forgotPassword, signOutUser } = useAuth();
+    const { setUserCreated } = useUserCreation();
     const axiosSecure = useAxiosSecure();
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
@@ -21,24 +24,35 @@ const Login = () => {
     const location = useLocation();
     const from = location?.state || '/';
 
-    // Function to insert user into database
+    // Function to insert user into database (for Google login)
     const insertUserIntoDatabase = useCallback(async (user) => {
         try {
-            await createDbUser(axiosSecure, {
+            const userData = {
                 name: user.displayName || '',
                 email: user.email,
                 photo: user.photoURL || '',
                 role: 'user'
-            });
+            };
+            
+            const result = await createDbUser(axiosSecure, userData);
+            
+            // Set the user creation status in context
+            setUserCreated(user.email);
+            
+            return result;
         } catch (dbError) {
-            console.error('Failed to insert user into database:', dbError);
             // If user already exists, the API will return a 409 conflict
-            // We can ignore this error as it means the user is already in the database
-            if (dbError.response?.status !== 409) {
+            // This is expected and fine - it means the user is already in the database
+            if (dbError.response?.status === 409) {
+                // Set flag even for existing users
+                setUserCreated(user.email);
+                return;
+            } else {
                 toast.error('Failed to save user information. Please contact support.');
+                throw dbError; // Re-throw the error so the calling function knows it failed
             }
         }
-    }, [axiosSecure]);
+    }, [axiosSecure, setUserCreated]);
 
     // Memoized login handler
     const handleLogin = useCallback(async (e) => {
@@ -49,13 +63,9 @@ const Login = () => {
         const email = form.email.value;
         const password = form.password.value;
 
-        //? SignIn User:
         try {
             const userCredential = await signInUser(email, password);
             const currentUser = userCredential.user;
-
-            // Insert user into database if not exists
-            await insertUserIntoDatabase(currentUser);
 
             // Check if email is verified for email/password users
             if (!currentUser.emailVerified && currentUser.providerData[0]?.providerId === 'password') {
@@ -76,26 +86,60 @@ const Login = () => {
                 return;
             }
 
+            // For email/password login, ensure user exists in our database
+            try {
+                const dbResult = await insertUserIntoDatabase(currentUser);
+                console.log('User verified in database:', dbResult);
+            } catch (insertError) {
+                // If we can't insert the user into the database, we should sign them out
+                try {
+                    await signOutUser();
+                } catch (signOutError) {
+                    console.error('Failed to sign out user:', signOutError);
+                }
+                toast.error('Failed to verify account. Please try again.');
+                return;
+            }
+
             // Check if user is admin
             try {
                 const userData = await getUserByEmail(axiosSecure, currentUser.email);
+                // Dispatch role change event to update UI components
+                window.dispatchEvent(new Event('roleChange'));
                 if (userData.role === 'admin') {
                     // Redirect admin users to admin dashboard
                     setTimeout(() => {
                         navigate('/admin-dashboard');
                     }, 300);
                 } else {
-                    // Redirect regular users to their original destination
+                    // Redirect regular users to user dashboard
                     setTimeout(() => {
-                        navigate(from);
+                        navigate('/user-dashboard');
                     }, 300);
                 }
             } catch (error) {
-                console.error('Error checking user role:', error);
-                // If there's an error checking role, redirect to home
-                setTimeout(() => {
-                    navigate(from);
-                }, 300);
+                // If user not found (404), this means they exist in Firebase but not in our database
+                if (error.response?.status === 404) {
+                    // This is an edge case - user exists in Firebase but not in our database
+                    // We should sign them out and prompt them to register
+                    toast.error('Account not found in our system. Please register first.');
+                    try {
+                        await signOutUser();
+                    } catch (signOutError) {
+                        console.error('Failed to sign out user:', signOutError);
+                    }
+                    // Redirect to register page
+                    setTimeout(() => {
+                        navigate('/register');
+                    }, 300);
+                } else {
+                    // For other errors, redirect to user dashboard as fallback
+                    // Dispatch role change event to update UI components
+                    window.dispatchEvent(new Event('roleChange'));
+                    setTimeout(() => {
+                        navigate('/user-dashboard');
+                    }, 300);
+                }
             }
 
             // Success notification
@@ -112,57 +156,72 @@ const Login = () => {
             setUser(currentUser);
         }
 
-        // Error handling :
+        // Error handling
         catch (err) {
             console.error('Login error:', err);
-            
-            // More user-friendly error messages
-            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
-                toast.error('Wrong email or password! Please try again.');
-            } else if (err.code === 'auth/invalid-email') {
-                toast.error('Please enter a valid email address.');
-            } else if (err.code === 'auth/user-disabled') {
-                toast.error('This account has been disabled.');
-            } else if (err.code === 'auth/user-not-found') {
-                toast.error('No account found with this email. Please register first.');
-            } else if (err.code === 'auth/too-many-requests') {
-                toast.error('Too many failed login attempts. Please try again later or reset your password.');
-            } else {
-                toast.error('Something went wrong. Please try again later!');
-            }
-        };
-    }, [signInUser, setUser, navigate, from, insertUserIntoDatabase, axiosSecure]);
+            const errorMessage = getFirebaseErrorMessage(err);
+            toast.error(errorMessage);
+        }
+    }, [signInUser, setUser, navigate, axiosSecure, signOutUser]);
 
     // Memoized Google login handler
     const handleGoogleLogin = useCallback(async () => {
-        //? Login User with Google:
         try {
             const userCredential = await createGoogleUser();
             const currentUser = userCredential.user;
             
-            // Insert user into database if not exists
-            await insertUserIntoDatabase(currentUser);
+            // For Google login, we need to ensure the user exists in our database
+            // This handles both login and registration cases
+            try {
+                const dbResult = await insertUserIntoDatabase(currentUser);
+                console.log('User verified in database:', dbResult);
+            } catch (insertError) {
+                // If we can't insert the user into the database, we should sign them out
+                try {
+                    await signOutUser();
+                } catch (signOutError) {
+                    console.error('Failed to sign out user:', signOutError);
+                }
+                toast.error('Failed to create account. Please try again.');
+                return;
+            }
             
-            // Check if user is admin
+            // Add a small delay to ensure database consistency
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            // Now that we've ensured the user exists in the database, check their role
             try {
                 const userData = await getUserByEmail(axiosSecure, currentUser.email);
+                // Dispatch role change event to update UI components
+                window.dispatchEvent(new Event('roleChange'));
                 if (userData.role === 'admin') {
                     // Redirect admin users to admin dashboard
                     setTimeout(() => {
                         navigate('/admin-dashboard');
                     }, 300);
                 } else {
-                    // Redirect regular users to home
+                    // Redirect regular users to user dashboard
                     setTimeout(() => {
-                        navigate('/');
+                        navigate('/user-dashboard');
                     }, 300);
                 }
             } catch (error) {
-                console.error('Error checking user role:', error);
-                // If there's an error checking role, redirect to home
-                setTimeout(() => {
-                    navigate('/');
-                }, 300);
+                // If user not found (404), this means they exist in Firebase but not in our database
+                if (error.response?.status === 404) {
+                    // This is expected for new Google users - assume regular user role
+                    // Dispatch role change event to update UI components
+                    window.dispatchEvent(new Event('roleChange'));
+                    setTimeout(() => {
+                        navigate('/user-dashboard');
+                    }, 300);
+                } else {
+                    // For other errors, redirect to user dashboard as fallback
+                    // Dispatch role change event to update UI components
+                    window.dispatchEvent(new Event('roleChange'));
+                    setTimeout(() => {
+                        navigate('/user-dashboard');
+                    }, 300);
+                }
             }
 
             // Success notification
@@ -179,25 +238,16 @@ const Login = () => {
             setUser(currentUser);
         } catch (err) {
             console.error('Google login error:', err);
-            
-            // More user-friendly error messages
-            if (err.code === 'auth/popup-blocked') {
-                toast.error('Popup was blocked. Please allow popups and try again.');
-            } else if (err.code === 'auth/account-exists-with-different-credential') {
-                toast.error('An account already exists with this email. Please try logging in with your existing account.');
-            } else if (err.code === 'auth/popup-closed-by-user') {
-                toast.error('Sign in popup was closed. Please try again.');
-            } else {
-                toast.error(`Login failed: ${err.message}`);
-            }
+            const errorMessage = getFirebaseErrorMessage(err);
+            toast.error(errorMessage);
         }
-    }, [createGoogleUser, setUser, navigate, insertUserIntoDatabase, axiosSecure]);
+    }, [createGoogleUser, setUser, navigate, axiosSecure, signOutUser, insertUserIntoDatabase]);
 
     // Memoized forgot password handler
     const handleForgotPassword = useCallback(async () => {
         const email = emailRef.current.value;
 
-        // Empty email check :
+        // Empty email check
         if (!email) {
             Swal.fire({
                 toast: true,
@@ -227,7 +277,6 @@ const Login = () => {
         }
 
         try {
-            //? Reset Password:
             await forgotPassword(email);
 
             Swal.fire({
@@ -241,49 +290,16 @@ const Login = () => {
             });
         } catch (err) {
             console.error('Password reset error:', err);
-            
-            // More user-friendly error messages
-            if (err.code === 'auth/invalid-email') {
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    icon: "error",
-                    title: "Please enter a valid email address."
-                });
-            } else if (err.code === 'auth/user-not-found') {
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    icon: "error",
-                    title: "No account found with this email address."
-                });
-            } else if (err.code === 'auth/too-many-requests') {
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    icon: "error",
-                    title: "Too many requests. Please try again later."
-                });
-            } else {
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    icon: "error",
-                    title: "Failed to send password reset email. Please try again."
-                });
-            }
+            const errorMessage = getFirebaseErrorMessage(err);
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                icon: "error",
+                title: errorMessage
+            });
         }
     }, [forgotPassword]);
 

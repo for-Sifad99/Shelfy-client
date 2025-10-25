@@ -1,8 +1,21 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { AuthContext } from './AuthContext'
-import { auth } from '../../firebase/firebase.config'
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail, updateProfile, signOut, onAuthStateChanged, sendEmailVerification } from 'firebase/auth';
+import { AuthContext } from './AuthContext';
+import { auth } from '../../firebase/firebase.config';
+import { 
+    createUserWithEmailAndPassword, 
+    GoogleAuthProvider, 
+    signInWithEmailAndPassword, 
+    signInWithPopup, 
+    sendPasswordResetEmail, 
+    updateProfile, 
+    signOut, 
+    onAuthStateChanged, 
+    sendEmailVerification 
+} from 'firebase/auth';
+import { UserCreationProvider } from './UserCreationContext';
+import { getFirebaseErrorMessage, isTooManyRequestsError } from '../utils/firebaseErrorUtils';
 
+// AuthProvider component to manage authentication state and functions
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -19,55 +32,75 @@ const AuthProvider = ({ children }) => {
     // Memoize Google provider to prevent recreation on each render
     const googleProvider = useMemo(() => new GoogleAuthProvider(), []);
 
-    //? Create User:
+    // Create User with email and password
     const createUser = useCallback(async (email, password) => {
         startLoading();
         try {
-            // Create user in Firebase
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             return userCredential;
+        } catch (error) {
+            // Re-throw error with user-friendly message
+            throw new Error(getFirebaseErrorMessage(error));
         } finally {
             stopLoading();
         }
     }, [startLoading, stopLoading]);
 
-    //? Create User with Google:
+    // Create User with Google
     const createGoogleUser = useCallback(async () => {
         startLoading();
         try {
-            // Sign in with Google
             const userCredential = await signInWithPopup(auth, googleProvider);
             return userCredential;
+        } catch (error) {
+            // Re-throw error with user-friendly message
+            throw new Error(getFirebaseErrorMessage(error));
         } finally {
             stopLoading();
         }
     }, [googleProvider, startLoading, stopLoading]);
 
-    //? SignIn User:
+    // Sign In User with email and password
     const signInUser = useCallback(async (email, password) => {
         startLoading();
         try {
-            // Sign in user with Firebase
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             return userCredential;
+        } catch (error) {
+            // Re-throw error with user-friendly message
+            throw new Error(getFirebaseErrorMessage(error));
         } finally {
             stopLoading();
         }
     }, [startLoading, stopLoading]);
 
-    //? Reset Password:
-    const forgotPassword = useCallback((email) => {
+    // Reset Password
+    const forgotPassword = useCallback(async (email) => {
         startLoading();
-        return sendPasswordResetEmail(auth, email);
+        try {
+            await sendPasswordResetEmail(auth, email);
+        } catch (error) {
+            // Re-throw error with user-friendly message
+            throw new Error(getFirebaseErrorMessage(error));
+        } finally {
+            stopLoading();
+        }
     }, [startLoading]);
 
-    //? Update User Profile:
-    const profileUpdate = useCallback((currentUser, updatedObj) => {
+    // Update User Profile
+    const profileUpdate = useCallback(async (currentUser, updatedObj) => {
         startLoading();
-        return updateProfile(currentUser, updatedObj);
+        try {
+            await updateProfile(currentUser, updatedObj);
+        } catch (error) {
+            // Re-throw error with user-friendly message
+            throw new Error(getFirebaseErrorMessage(error));
+        } finally {
+            stopLoading();
+        }
     }, [startLoading]);
 
-    //? Send Email Verification:
+    // Send Email Verification
     const sendVerificationEmail = useCallback(async (user) => {
         startLoading();
         try {
@@ -92,26 +125,30 @@ const AuthProvider = ({ children }) => {
             return result;
         } catch (error) {
             // Handle quota exceeded error specifically
-            // Check if it's a "too many requests" error by looking at error properties
-            if (error && typeof error === 'object' && 
-                (error.code === 'auth/too-many-requests' ||
-                 (error.message && error.message.includes('too many requests')) ||
-                 (error.response && error.response.status === 429))) {
+            if (isTooManyRequestsError(error)) {
                 throw new Error('Too many requests. Please wait a while before requesting another verification email.');
             }
-            throw error;
+            // Re-throw error with user-friendly message
+            throw new Error(getFirebaseErrorMessage(error));
         } finally {
             stopLoading();
         }
     }, [startLoading, stopLoading]);
 
-    //? SignOut User:
-    const signOutUser = useCallback(() => {
+    // Sign Out User
+    const signOutUser = useCallback(async () => {
         startLoading();
-        return signOut(auth);
+        try {
+            await signOut(auth);
+        } catch (error) {
+            // Re-throw error with user-friendly message
+            throw new Error(getFirebaseErrorMessage(error));
+        } finally {
+            stopLoading();
+        }
     }, [startLoading]);
 
-    //? Observer:
+    // Auth State Observer
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -137,9 +174,13 @@ const AuthProvider = ({ children }) => {
         signOutUser
     }), [loading, user, createUser, createGoogleUser, signInUser, forgotPassword, profileUpdate, sendVerificationEmail, signOutUser]);
 
-    return <AuthContext.Provider value={authInfo}>
-        {children}
-    </AuthContext.Provider>  
+    return (
+        <AuthContext.Provider value={authInfo}>
+            <UserCreationProvider>
+                {children}
+            </UserCreationProvider>
+        </AuthContext.Provider>
+    );
 };
 
 export default AuthProvider;

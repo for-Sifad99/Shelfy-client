@@ -10,37 +10,61 @@ import Swal from "sweetalert2";
 import useAuth from "../../hooks/UseAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { createUser as createDbUser } from "../../api/userApis";
+import { getFirebaseErrorMessage } from "../../utils/firebaseErrorUtils";
+import { useUserCreation } from "../../contexts/UserCreationContext";
+import uploadImageToImgBB from "../../utils/imageUpload";
 
+// Register component with enhanced authentication flow
 const Register = () => {
     const { setUser, createUser: createAuthUser, createGoogleUser, profileUpdate, sendVerificationEmail, signOutUser } = useAuth();
+    const { setUserCreated } = useUserCreation();
     const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null);
 
     // Memoized password visibility toggle
     const togglePasswordVisibility = useCallback(() => {
         setShowPassword(prev => !prev);
     }, []);
 
+    // Handle file selection
+    const handleFileChange = useCallback((e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    }, []);
+
     // Function to insert user into database
     const insertUserIntoDatabase = useCallback(async (user) => {
         try {
-            await createDbUser(axiosSecure, {
+            const result = await createDbUser(axiosSecure, {
                 name: user.displayName || '',
                 email: user.email,
                 photo: user.photoURL || '',
                 role: 'user'
             });
+            
+            // Set the user creation status in context
+            setUserCreated(user.email);
+            
+            // Return the result to ensure the caller knows the operation is complete
+            return result;
         } catch (dbError) {
-            console.error('Failed to insert user into database:', dbError);
             // If user already exists, the API will return a 409 conflict
             // We can ignore this error as it means the user is already in the database
             if (dbError.response?.status !== 409) {
                 toast.error('Failed to save user information. Please contact support.');
+                throw dbError; // Re-throw to let the caller know about the error
+            } else {
+                // Even if user exists, set creation status
+                setUserCreated(user.email);
+                return { status: 'already_exists' };
             }
         }
-    }, [axiosSecure]);
+    }, [axiosSecure, setUserCreated]);
 
     // Memoized registration handler
     const handleRegister = useCallback(async (e) => {
@@ -49,19 +73,26 @@ const Register = () => {
         // Form data:
         const form = e.target;
         const name = form.name.value;
-        const photo = form.photo.value;
         const email = form.email.value;
         const password = form.password.value;
         const checkbox = form.checkbox.checked;
+        const fileInput = form.querySelector('input[type="file"]');
+        const selectedFile = fileInput?.files[0];
 
         // empty validation
-        if (!name || !photo || !email || !password) {
+        if (!name || !email || !password) {
             toast.warning("Please fill in all fields!");
             return;
         } else if (!checkbox) {
             toast.warning("Please Accept terms!");
             return;
         };
+
+        // Check if a file is selected
+        if (!selectedFile) {
+            toast.warning("Please select a profile picture!");
+            return;
+        }
 
         // password validation
         if (password.length < 6) return setError("Password must be at least 6 characters!");
@@ -70,19 +101,29 @@ const Register = () => {
         if (!/[0-9]/.test(password)) return setError("Include at least one number!");
         if (!/[!@#$%^&*]/.test(password)) return setError("Include at least one special character!");
 
-        //? Create User:
         try {
+            // Upload the selected file to ImgBB
+            let photoURL = '';
+            try {
+                photoURL = await uploadImageToImgBB(selectedFile);
+            } catch (uploadError) {
+                console.error('Image upload failed:', uploadError);
+                toast.error('Failed to upload profile picture. Please try again.');
+                return;
+            }
+            
             const userCredential = await createAuthUser(email, password);
             const currentUser = userCredential.user;
 
-            // ✅ Update displayName and photoURL
+            // Update displayName and photoURL
             await profileUpdate(currentUser, {
                 displayName: name,
-                photoURL: photo
+                photoURL: photoURL
             });
             
-            // Insert user into database
-            await insertUserIntoDatabase(currentUser);
+            // Insert user into database and wait for completion
+            const dbResult = await insertUserIntoDatabase(currentUser);
+            console.log('User successfully created in database:', dbResult);
             
             // Send verification email
             try {
@@ -113,44 +154,62 @@ const Register = () => {
                 title: "Account created! Please check your email for verification."
             });
 
+            // Dispatch role change event to update UI components
+            window.dispatchEvent(new Event('roleChange'));
             // Redirect to email verification page
             setTimeout(() => {
                 navigate('/email-verification');
             }, 3000);
         }
-        // Error handling :
+        // Error handling
         catch (err) {
             console.error('Registration error:', err);
-            
-            // More user-friendly error messages
-            if (err.code === 'auth/email-already-in-use') {
-                toast.error('This email is already registered. Please try logging in instead.');
-            } else if (err.code === 'auth/invalid-email') {
-                toast.error('Please enter a valid email address.');
-            } else if (err.code === 'auth/operation-not-allowed') {
-                toast.error('Email/password accounts are not enabled.');
-            } else if (err.code === 'auth/weak-password') {
-                toast.error('Password is too weak. Please use a stronger password.');
-            } else {
-                toast.error(`Registration failed: ${err.message}`);
-            }
+            const errorMessage = getFirebaseErrorMessage(err);
+            toast.error(errorMessage);
         };
     }, [createAuthUser, profileUpdate, sendVerificationEmail, setUser, navigate, insertUserIntoDatabase]);
 
     // Memoized Google registration handler
     const handleGoogleUser = useCallback(async () => {
-        //? Create User with Google:
         try {
+            // For Google registration, we'll use a default avatar if no file is selected
+            let photoURL = '';
+            // Get the selected file from the form
+            const form = document.querySelector('form');
+            const fileInput = form?.querySelector('input[type="file"]');
+            const selectedFile = fileInput?.files[0];
+            
+            if (selectedFile) {
+                try {
+                    photoURL = await uploadImageToImgBB(selectedFile);
+                } catch (uploadError) {
+                    console.error('Image upload failed:', uploadError);
+                    toast.error('Failed to upload profile picture. Please try again.');
+                    return;
+                }
+            } else {
+                // Use default avatar or Google profile picture
+                photoURL = '';
+            }
+            
             const userCredential = await createGoogleUser();
             const currentUser = userCredential.user;
             
-            // Insert user into database
-            await insertUserIntoDatabase(currentUser);
+            // If we have an uploaded photo URL, update the profile
+            if (photoURL) {
+                await profileUpdate(currentUser, {
+                    photoURL: photoURL
+                });
+            }
+            
+            // Insert user into database and wait for completion
+            const dbResult = await insertUserIntoDatabase(currentUser);
+            console.log('User successfully created in database:', dbResult);
             
             // Set user in context
             setUser(currentUser);
             
-            // Sweet Alert :
+            // Sweet Alert
             const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -167,25 +226,20 @@ const Register = () => {
                 title: "Account created!"
             });
 
-            // For Google sign-in, redirect to home since email is already verified
+            // Dispatch role change event to update UI components
+            window.dispatchEvent(new Event('roleChange'));
+            // For Google sign-in, redirect to user dashboard since email is already verified
             setTimeout(() => {
-                navigate('/');
+                navigate('/user-dashboard');
             }, 3000);
         }
-        // Error handling :
+        // Error handling
         catch (err) {
             console.error('Google registration error:', err);
-            
-            // More user-friendly error messages
-            if (err.code === 'auth/popup-blocked') {
-                toast.error('Popup was blocked. Please allow popups and try again.');
-            } else if (err.code === 'auth/account-exists-with-different-credential') {
-                toast.error('An account already exists with this email. Please try logging in with your existing account.');
-            } else {
-                toast.error(`Registration failed: ${err.message}`);
-            }
+            const errorMessage = getFirebaseErrorMessage(err);
+            toast.error(errorMessage);
         };
-    }, [createGoogleUser, setUser, navigate, insertUserIntoDatabase]);
+    }, [createGoogleUser, profileUpdate, setUser, navigate, insertUserIntoDatabase]);
 
     return (
         <>
@@ -264,12 +318,13 @@ const Register = () => {
                                 {/* Photo URL */}
                                 <div>
                                     <input
-                                        type="text"
-                                        name='photo'
-                                        placeholder="Photo URL"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
                                         className="w-full dark:text-gray-300 border-b border-gray-300 dark:border-slate-400 focus:outline-none focus:border-blue-600 dark:focus:border-blue-400 py-1 mt-1 placeholder-gray-500 dark:placeholder-gray-400"
                                         required
                                     />
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Select a profile picture</p>
                                 </div>
 
                                 {/* Email */}

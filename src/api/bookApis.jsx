@@ -69,6 +69,24 @@ const deleteBorrowedBook = async (axiosInstance, id) => {
     return res.data;
 };
 
+// Get all borrowed books info
+const getAllBorrowedBooksInfo = async (axiosInstance) => {
+    const res = await axiosInstance.get('/borrowedBooksInfo');
+    return res.data;
+};
+
+// Get top users by books added
+const getTopUsersByBooks = async (axiosInstance) => {
+    const res = await axiosInstance.get('/topUsersByBooks');
+    return res.data;
+};
+
+// Delete book by ID
+const deleteBook = async (axiosSecure, id) => {
+    const res = await axiosSecure.delete(`/deleteBook/${id}`);
+    return res.data;
+};
+
 export { 
     postBooks, 
     patchBook, 
@@ -79,5 +97,8 @@ export {
     getTopRatingBooks, 
     addBorrowedBookInfo, 
     getBorrowedBooksByEmail, 
-    deleteBorrowedBook 
+    deleteBorrowedBook,
+    getAllBorrowedBooksInfo,
+    getTopUsersByBooks,
+    deleteBook
 };

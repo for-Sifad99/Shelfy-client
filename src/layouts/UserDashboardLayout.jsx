@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router';
 import {
-  FaChevronLeft,
-  FaChevronRight,
+  FaAngleDoubleLeft,
+  FaAngleDoubleRight,
   FaTachometerAlt,
   FaBook,
-  FaUsers,
   FaCog,
   FaSignOutAlt,
   FaUser,
@@ -13,8 +12,8 @@ import {
 import useAuth from '../hooks/UseAuth';
 import NotificationBell from '../components/NotificationBell';
 
-// Admin dashboard layout component with enhanced security and sidebar navigation
-const AdminDashboardLayout = () => {
+// User dashboard layout component with enhanced security and sidebar navigation
+const UserDashboardLayout = () => {
   const { user, signOutUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,18 +43,17 @@ const AdminDashboardLayout = () => {
     }
   };
 
-  // Navigation items for admin dashboard
+  // Navigation items for user dashboard
   const navItems = [
-    { name: 'Dashboard', icon: <FaTachometerAlt />, path: '/admin-dashboard' },
-    { name: 'Manage Books', icon: <FaBook />, path: '/admin-dashboard/manage-books' },
-    { name: 'Manage Users', icon: <FaUsers />, path: '/admin-dashboard/manage-users' },
-    { name: 'Profile', icon: <FaUser />, path: '/admin-dashboard/profile' },
-    { name: 'Settings', icon: <FaCog />, path: '/admin-dashboard/settings' },
+    { name: 'Dashboard', icon: <FaTachometerAlt />, path: '/user-dashboard' },
+    { name: 'My Library', icon: <FaBook />, path: '/user-dashboard/my-library' },
+    { name: 'Profile', icon: <FaUser />, path: '/user-dashboard/profile' },
+    { name: 'Settings', icon: <FaCog />, path: '/user-dashboard/settings' },
   ];
 
   // Helper functions to get user display information
-  const getUserDisplayName = () => (user ? user.displayName || user.email || 'Admin' : 'Admin');
-  const getUserEmail = () => (user?.email ? user.email : 'admin@example.com');
+  const getUserDisplayName = () => (user ? user.displayName || user.email || 'User' : 'User');
+  const getUserEmail = () => (user?.email ? user.email : 'user@example.com');
 
   return (
     <div
@@ -91,21 +89,20 @@ const AdminDashboardLayout = () => {
         }}
       >
         {/* Logo Section */}
-        <div
+        <Link
+          to="/"
           className={`flex items-center p-4 border-b border-gray-700 ${
-            sidebarCollapsed ? 'justify-center' : ''
+            sidebarCollapsed ? 'justify-center' : 'justify-start'
           }`}
         >
-          <Link to="/" className="flex items-center">
-            <img src="/logo.png" alt="Logo" className="w-8 h-8" />
-            {!sidebarCollapsed && (
-              <div className="ml-2">
-                <span className="text-xl font-bold block">SHELFY</span>
-                <span className="text-xs block">ADMIN PANEL</span>
-              </div>
-            )}
-          </Link>
-        </div>
+          <img src="/logo.png" alt="Logo" className="w-8 h-8" />
+          {!sidebarCollapsed && (
+            <div className="ml-2">
+              <span className="text-xl font-bold block">SHELFY</span>
+              <span className="text-xs block">USER PANEL</span>
+            </div>
+          )}
+        </Link>
 
         {!sidebarCollapsed && (
           <div className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
@@ -147,6 +144,7 @@ const AdminDashboardLayout = () => {
           </ul>
         </nav>
 
+        {/* Sign out */}
         <div className="absolute bottom-0 w-full p-4 border-t border-gray-700">
           <button
             onClick={handleSignOut}
@@ -161,43 +159,85 @@ const AdminDashboardLayout = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main content */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Topbar */}
         <header className="bg-white dark:bg-[var(--color-dark-secondary)] shadow-sm">
-          <div className="flex items-center justify-between px-4 py-3">
-            {/* Sidebar Toggle */}
-            <button
-              className="rounded-full bg-white dark:bg-gray-700 p-2 text-[var(--color-dark-secondary)] dark:text-white shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            >
-              {sidebarCollapsed ? <FaChevronRight size={18} /> : <FaChevronLeft size={18} />}
-            </button>
-
-            {/* Notification & Profile */}
-            <div className="flex items-center space-x-4">
-              <NotificationBell />
-                            
-              <div className="flex items-center space-x-2">
-                {user?.photoURL ? (
-                  <img src={user.photoURL} alt="User" className="w-8 h-8 rounded-full" />
+          {sidebarPosition === 'left' ? (
+            <div className="flex items-center justify-between px-4 py-3">
+              {/* Sidebar Toggle */}
+              <button
+                className="rounded-full bg-white dark:bg-gray-700 p-2 text-[var(--color-dark-secondary)] dark:text-white shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              >
+                {sidebarCollapsed ? (
+                  <FaAngleDoubleRight size={18} />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-[var(--color-primary-orange)] flex items-center justify-center text-white">
-                    {user?.displayName?.charAt(0) || user?.email?.charAt(0) || 'U'}
-                  </div>
+                  <FaAngleDoubleLeft size={18} />
                 )}
-                <div className="hidden md:block">
-                  <p className="text-sm font-medium text-[var(--color-dark-secondary)] dark:text-white">
-                    {getUserDisplayName()}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-300">{getUserEmail()}</p>
+              </button>
+
+              {/* Notification & Profile */}
+              <div className="flex items-center space-x-4">
+                <NotificationBell />
+                                
+                <div className="flex items-center space-x-2">
+                  {user?.photoURL ? (
+                    <img src={user.photoURL} alt="User" className="w-8 h-8 rounded-full" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-[var(--color-primary-orange)] flex items-center justify-center text-white">
+                      {user?.displayName?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                    </div>
+                  )}
+                  <div className="hidden md:block">
+                    <p className="text-sm font-medium text-[var(--color-dark-secondary)] dark:text-white">
+                      {getUserDisplayName()}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-300">{getUserEmail()}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex items-center justify-between px-4 py-3">
+              {/* Notification & Profile */}
+              <div className="flex items-center space-x-4">
+                <NotificationBell />
+                                
+                <div className="flex items-center space-x-2">
+                  {user?.photoURL ? (
+                    <img src={user.photoURL} alt="User" className="w-8 h-8 rounded-full" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-[var(--color-primary-orange)] flex items-center justify-center text-white">
+                      {user?.displayName?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                    </div>
+                  )}
+                  <div className="hidden md:block">
+                    <p className="text-sm font-medium text-[var(--color-dark-secondary)] dark:text-white">
+                      {getUserDisplayName()}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-300">{getUserEmail()}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sidebar Toggle */}
+              <button
+                className="rounded-full bg-white dark:bg-gray-700 p-2 text-[var(--color-dark-secondary)] dark:text-white shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              >
+                {sidebarCollapsed ? (
+                  <FaAngleDoubleLeft size={18} />
+                ) : (
+                  <FaAngleDoubleRight size={18} />
+                )}
+              </button>
+            </div>
+          )}
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50 dark:bg-[#1a1d24]">
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-100 dark:bg-[var(--color-bg)]">
           <Outlet />
         </main>
       </div>
@@ -205,4 +245,4 @@ const AdminDashboardLayout = () => {
   );
 };
 
-export default AdminDashboardLayout;
+export default UserDashboardLayout;

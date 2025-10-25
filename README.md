@@ -106,6 +106,15 @@ VITE_appId=YOUR_FIREBASE_APP_ID
 
 ---
 
+## 👤 Admin Credentials
+
+For testing purposes, you can use the following admin credentials:
+
+**Email:** sifayed99@gmail.com  
+**Password:** @Admin99
+
+---
+
 ## 🔮 Future Updates
 
 This project is just the beginning. In the future, many exciting features and improvements will be added to make the platform more powerful, user-friendly, and engaging. Stay tuned for upcoming updates!
@@ -114,4 +123,4 @@ This project is just the beginning. In the future, many exciting features and im
 
 ## 🪶 Notes
 
-You can paste this entire block into your `README.md` file in the client repo. 
+You can paste this entire block into your `README.md` file in the client repo.

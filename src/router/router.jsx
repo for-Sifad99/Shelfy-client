@@ -4,6 +4,7 @@ import {
 } from "react-router";
 import PrivetRouter from '../router/PrivetRouter';
 import AdminRoute from '../router/AdminRoute';
+import UserRoute from '../router/UserRoute';
 import Root from '../layouts/Root';
 import Home from '../pages/Home/Home';
 import AllBooks from '../pages/AllBooks/AllBooks';
@@ -21,7 +22,13 @@ import ErrorPage from '../pages/ErrorPage/ErrorPage';
 import AdminDashboardLayout from '../layouts/AdminDashboardLayout';
 import AdminDashboard from '../pages/AdminDashboard/AdminDashboard';
 import Settings from '../pages/AdminDashboard/Settings';
-import Profile from '../pages/AdminDashboard/Profile';
+import AdminProfile from '../pages/AdminDashboard/Profile';
+import ManageBooks from '../pages/AdminDashboard/ManageBooks';
+import ManageUsers from '../pages/AdminDashboard/ManageUsers';
+import UserDashboardLayout from '../layouts/UserDashboardLayout';
+import UserDashboard from '../pages/UserDashboard/UserDashboard';
+import UserProfile from '../pages/UserDashboard/Profile';
+import MyLibrary from '../pages/UserDashboard/MyLibrary';
 
 const router = createBrowserRouter([
     {
@@ -88,19 +95,37 @@ const router = createBrowserRouter([
             },
             {
                 path: 'manage-books',
-                element: <div>Manage Books Page</div>
+                element: <ManageBooks />
             },
             {
                 path: 'manage-users',
-                element: <div>Manage Users Page</div>
-            },
-            {
-                path: 'reports',
-                element: <div>Reports Page</div>
+                element: <ManageUsers />
             },
             {
                 path: 'profile',
-                element: <Profile />
+                element: <AdminProfile />
+            },
+            {
+                path: 'settings',
+                element: <Settings />
+            }
+        ]
+    },
+    {
+        path: "/user-dashboard",
+        element: <UserRoute><UserDashboardLayout /></UserRoute>,
+        children: [
+            {
+                index: true,
+                element: <UserDashboard />
+            },
+            {
+                path: 'my-library',
+                element: <MyLibrary />
+            },
+            {
+                path: 'profile',
+                element: <UserProfile />
             },
             {
                 path: 'settings',

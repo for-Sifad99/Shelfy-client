@@ -4,6 +4,8 @@ import { FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarkerAlt, FaCamera } fro
 import useAuth from '../../hooks/UseAuth';
 import uploadImageToImgBB from '../../utils/imageUpload';
 import avatar from '../../assets/avatarImg/avatar.jpg';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { getUserByEmail } from '../../api/userApis';
 
 const Profile = () => {
     const { user, profileUpdate } = useAuth();
@@ -133,13 +135,13 @@ const Profile = () => {
         <>
             {/* Helmet for SEO */}
             <Helmet>
-                <title>Profile - Shelfy Admin</title>
-                <meta name="description" content="Admin profile for Shelfy book library" />
+                <title>Profile - Shelfy User</title>
+                <meta name="description" content="User profile for Shelfy book library" />
             </Helmet>
 
             {/* Photo Update Popup */}
             {showPhotoPopup && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black/60 bg-backdrop-xs flex items-center justify-center z-50">
                     <div className="bg-white dark:bg-[#1f2937] rounded-lg p-6 w-full max-w-md">
                         <h2 className="text-xl font-bold mb-4 text-[var(--color-dark-secondary)] dark:text-white">
                             Update Profile Photo
@@ -159,7 +161,7 @@ const Profile = () => {
                                 type="file"
                                 accept="image/*"
                                 onChange={handleNewPhotoChange}
-                                className="w-full mb-4"
+                                className="w-full mb-4 text-gray-900 dark:text-gray-100"
                             />
                             
                             {/* Buttons */}
@@ -222,7 +224,7 @@ const Profile = () => {
                                     {user?.displayName || 'User'}
                                 </h2>
                                 <p className="text-white text-opacity-80 mt-1">
-                                    Administrator
+                                    User
                                 </p>
                                 <p className="text-white text-opacity-80 mt-1 flex items-center justify-center md:justify-start">
                                     <FaEnvelope className="mr-2" />
