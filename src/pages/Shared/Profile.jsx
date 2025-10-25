@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from 'react-router';
-import { MdLogout, MdEmail } from "react-icons/md";
+import { MdLogout, MdEmail, MdDashboard } from "react-icons/md";
 import Swal from "sweetalert2";
 import useAuth from '../../hooks/UseAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { getUserByEmail } from '../../api/userApis';
 
 const Profile = () => {
     const { signOutUser, user } = useAuth();
@@ -11,11 +12,29 @@ const Profile = () => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [clickedOpen, setClickedOpen] = useState(false); // track click
+    const [isAdmin, setIsAdmin] = useState(false);
     const modalRef = useRef(null);
     const profileRef = useRef(null);
 
     // Check if user needs email verification
     const needsEmailVerification = user && !user.emailVerified && user.providerData[0].providerId === 'password';
+
+    // Check if user is admin
+    useEffect(() => {
+        const checkAdminStatus = async () => {
+            if (user?.email) {
+                try {
+                    const userData = await getUserByEmail(axiosSecure, user.email);
+                    setIsAdmin(userData.role === 'admin');
+                } catch (error) {
+                    console.error('Error checking admin status:', error);
+                    setIsAdmin(false);
+                }
+            }
+        };
+
+        checkAdminStatus();
+    }, [user, axiosSecure]);
 
     const handleSignOut = async () => {
         Swal.fire({
@@ -41,6 +60,12 @@ const Profile = () => {
 
     const handleVerifyEmail = () => {
         navigate('/email-verification');
+        setIsOpen(false);
+        setClickedOpen(false);
+    };
+
+    const handleAdminDashboard = () => {
+        navigate('/admin-dashboard');
         setIsOpen(false);
         setClickedOpen(false);
     };
@@ -158,6 +183,16 @@ const Profile = () => {
                     )}
                     
                     <hr className="text-gray-300 dark:text-gray-600 mt-3 mb-2" />
+                    
+                    {/* Admin Dashboard Link */}
+                    {isAdmin && (
+                        <button
+                            onClick={handleAdminDashboard}
+                            className="text-sm w-full flex gap-2 items-center text-gray-500 dark:text-gray-300 py-1 pl-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"
+                        >
+                            <MdDashboard /> Admin Dashboard
+                        </button>
+                    )}
                     
                     <button
                         onClick={handleSignOut}

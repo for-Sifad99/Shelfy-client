@@ -2,7 +2,8 @@ import React from 'react';
 import {
     createBrowserRouter,
 } from "react-router";
-import PrivetRouter from '../router/PrivetRouter'
+import PrivetRouter from '../router/PrivetRouter';
+import AdminRoute from '../router/AdminRoute';
 import Root from '../layouts/Root';
 import Home from '../pages/Home/Home';
 import AllBooks from '../pages/AllBooks/AllBooks';
@@ -17,6 +18,8 @@ import Register from '../pages/Register/Register';
 import Login from '../pages/Login/Login';
 import EmailVerification from '../pages/EmailVerification/EmailVerification';
 import ErrorPage from '../pages/ErrorPage/ErrorPage';
+import AdminDashboardLayout from '../layouts/AdminDashboardLayout';
+import AdminDashboard from '../pages/AdminDashboard/AdminDashboard';
 
 const router = createBrowserRouter([
     {
@@ -37,7 +40,6 @@ const router = createBrowserRouter([
             },
             {
                 path: '/add-Books',
-
                 element: <PrivetRouter><AddBooks /></PrivetRouter>
             },
             {
@@ -72,6 +74,32 @@ const router = createBrowserRouter([
                 path: '/email-verification',
                 Component: EmailVerification
             },
+        ]
+    },
+    {
+        path: "/admin-dashboard",
+        element: <AdminRoute><AdminDashboardLayout /></AdminRoute>,
+        children: [
+            {
+                index: true,
+                element: <AdminDashboard />
+            },
+            {
+                path: 'manage-books',
+                element: <div>Manage Books Page</div>
+            },
+            {
+                path: 'manage-users',
+                element: <div>Manage Users Page</div>
+            },
+            {
+                path: 'reports',
+                element: <div>Reports Page</div>
+            },
+            {
+                path: 'settings',
+                element: <div>Settings Page</div>
+            }
         ]
     },
     {

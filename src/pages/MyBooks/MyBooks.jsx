@@ -185,7 +185,7 @@ const MyBooks = () => {
                                 <Loader /> :
                                 <>
                                     {view === 'card' && (
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:px-0 sm:px-16">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 gap-4 md:px-0 sm:px-16">
                                             {filteredBooks.map((book) => (
                                                 <div key={book._id} className="relative group rounded-xl">
                                                     <div className='bg-[#f5f5f5] dark:bg-[#374151] px-6 pt-6 pb-3 flex justify-center items-center rounded-xl'>
