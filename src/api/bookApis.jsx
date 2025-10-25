@@ -2,13 +2,13 @@
 
 // Add a new book
 const postBooks = async (axiosSecure, bookData) => {
-    const res = await axiosSecure.post('/api/addBooks', bookData);
+    const res = await axiosSecure.post('/addBooks', bookData);
     return res.data;
 };
 
 // Update a book by ID
 const patchBook = async (axiosSecure, id, bookData) => {
-    const res = await axiosSecure.patch(`/api/updateBook/${id}`, bookData);
+    const res = await axiosSecure.patch(`/updateBook/${id}`, bookData);
     return res.data;
 };
 
@@ -19,37 +19,47 @@ const getAllBooks = async (axiosInstance, category, page, limit) => {
     if (page) params.append('page', page);
     if (limit) params.append('limit', limit);
     
-    const res = await axiosInstance.get(`/api/allBooks?${params.toString()}`);
+    const res = await axiosInstance.get(`/allBooks?${params.toString()}`);
+    return res.data;
+};
+
+// Get books by user email with pagination
+const getBooksByUser = async (axiosSecure, email, page, limit) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page);
+    if (limit) params.append('limit', limit);
+    
+    const res = await axiosSecure.get(`/myBooks/${email}?${params.toString()}`);
     return res.data;
 };
 
 // Get a single book by ID
 const getBookById = async (axiosInstance, id) => {
-    const res = await axiosInstance.get(`/api/allBooks/${id}`);
+    const res = await axiosInstance.get(`/allBooks/${id}`);
     return res.data;
 };
 
 // Get top rating books
 const getTopRatingBooks = async (axiosInstance) => {
-    const res = await axiosInstance.get(`/api/topRatingBooks`);
+    const res = await axiosInstance.get(`/topRatingBooks`);
     return res.data;
 };
 
 // Add borrowed book info
 const addBorrowedBookInfo = async (axiosInstance, borrowedData) => {
-    const res = await axiosInstance.post('/api/addBorrowedBookInfo', borrowedData);
+    const res = await axiosInstance.post('/addBorrowedBookInfo', borrowedData);
     return res.data;
 };
 
 // Get borrowed books by email
 const getBorrowedBooksByEmail = async (axiosInstance, email) => {
-    const res = await axiosInstance.get(`/api/borrowedBooks/${email}`);
+    const res = await axiosInstance.get(`/borrowedBooks/${email}`);
     return res.data;
 };
 
 // Delete borrowed book by ID
 const deleteBorrowedBook = async (axiosInstance, id) => {
-    const res = await axiosInstance.delete(`/api/deleteBorrowedBook/${id}`);
+    const res = await axiosInstance.delete(`/deleteBorrowedBook/${id}`);
     return res.data;
 };
 
@@ -57,6 +67,7 @@ export {
     postBooks, 
     patchBook, 
     getAllBooks, 
+    getBooksByUser,
     getBookById, 
     getTopRatingBooks, 
     addBorrowedBookInfo, 

@@ -6,6 +6,7 @@ import PrivetRouter from '../router/PrivetRouter'
 import Root from '../layouts/Root';
 import Home from '../pages/Home/Home';
 import AllBooks from '../pages/AllBooks/AllBooks';
+import MyBooks from '../pages/MyBooks/MyBooks';
 import BorrowedBooks from '../pages/BorrowedBooks/BorrowedBooks';
 import Blogs from '../pages/Blogs/Blogs';
 import AddBooks from '../pages/AddBooks/AddBooks';
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
             {
                 path: '/all-books',
                 element: <AllBooks />
+            },
+            {
+                path: '/my-books',
+                element: <PrivetRouter><MyBooks /></PrivetRouter>
             },
             {
                 path: '/add-Books',

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import { FaArrowRight, FaHourglassStart, FaUser } from 'react-icons/fa6';
-import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { IoIosSunny, IoIosMoon } from "react-icons/io";
 import { RiLoginCircleLine } from "react-icons/ri";
 import { MdNotStarted } from "react-icons/md";
@@ -24,7 +23,7 @@ import {
     FiLogIn,
 } from 'react-icons/fi';
 import useTheme from '../../hooks/ThemeContext';
-import useAuth from "../../hooks/UseAuth";
+import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Profile from './Profile';
 
@@ -52,11 +51,6 @@ const Header = () => {
             }
         >
             Home
-            {location.pathname === '/' ? (
-                <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-            ) : (
-                <TiArrowSortedUp className="ml-[2px] text-sm" />
-            )}
         </NavLink>
 
         <NavLink
@@ -69,15 +63,22 @@ const Header = () => {
             }
         >
             All Books
-            {location.pathname === '/all-books' ? (
-                <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-            ) : (
-                <TiArrowSortedUp className="ml-[2px] text-sm" />
-            )}
         </NavLink>
 
         {
             user && !needsEmailVerification && <>
+                <NavLink
+                    to="/my-books"
+                    className={({ isActive }) =>
+                        `flex items-center hover:text-[var(--color-primary-orange)] hover:dark:text-orange-300 ${isActive
+                            ? 'text-[var(--color-primary-orange)] dark:text-orange-300'
+                            : ''
+                        }`
+                    }
+                >
+                    My Books
+                </NavLink>
+
                 <NavLink
                     to="/add-books"
                     className={({ isActive }) =>
@@ -88,11 +89,6 @@ const Header = () => {
                     }
                 >
                     Add Books
-                    {location.pathname === '/add-books' ? (
-                        <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-                    ) : (
-                        <TiArrowSortedUp className="ml-[2px] text-sm" />
-                    )}
                 </NavLink>
 
                 <NavLink
@@ -105,11 +101,6 @@ const Header = () => {
                     }
                 >
                     Borrowed
-                    {location.pathname === '/borrowed-books' ? (
-                        <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-                    ) : (
-                        <TiArrowSortedUp className="ml-[2px] text-sm" />
-                    )}
                 </NavLink>
             </>
         }
@@ -123,11 +114,6 @@ const Header = () => {
             }
         >
             Blogs
-            {location.pathname === '/blogs' ? (
-                <TiArrowSortedDown className="ml-[2px] text-sm text-[var(--color-primary-orange)] dark:text-orange-300" />
-            ) : (
-                <TiArrowSortedUp className="ml-[2px] text-sm" />
-            )}
         </NavLink>
     </>;
 
@@ -141,9 +127,6 @@ const Header = () => {
             }
         >
             <span>Home</span>
-            {location.pathname === '/' ?
-                <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
-                <TiArrowSortedUp className="text-sm" />}
         </NavLink>
 
         <NavLink
@@ -155,12 +138,20 @@ const Header = () => {
             }
         >
             <span>All Books</span>
-            {location.pathname === '/all-books' ?
-                <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
-                <TiArrowSortedUp className="text-sm" />}
         </NavLink>
 
         {user && !needsEmailVerification && <>
+            <NavLink
+                to="/my-books"
+                onClick={() => setIsSidebarOpen(false)}
+                className={({ isActive }) =>
+                    `flex items-center justify-between rounded hover:text-[var(--color-primary-orange)]
+        ${isActive ? 'text-[var(--color-primary-orange)]' : ''}`
+                }
+            >
+                <span>My Books</span>
+            </NavLink>
+
             <NavLink
                 to="/add-books"
                 onClick={() => setIsSidebarOpen(false)}
@@ -170,9 +161,6 @@ const Header = () => {
                 }
             >
                 <span>Add Books</span>
-                {location.pathname === '/add-books' ?
-                    <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
-                    <TiArrowSortedUp className="text-sm" />}
             </NavLink>
 
             <NavLink
@@ -184,9 +172,6 @@ const Header = () => {
                 }
             >
                 <span>Borrowed</span>
-                {location.pathname === '/borrowed-books' ?
-                    <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
-                    <TiArrowSortedUp className="text-sm" />}
             </NavLink>
         </>}
 
@@ -199,9 +184,6 @@ const Header = () => {
             }
         >
             <span>Blogs</span>
-            {location.pathname === '/blogs' ?
-                <TiArrowSortedDown className="text-sm text-[var(--color-primary-orange)]" /> :
-                <TiArrowSortedUp className="text-sm" />}
         </NavLink>
     </>;
 

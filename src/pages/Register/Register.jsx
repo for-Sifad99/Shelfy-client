@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/UseAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { createUser as createDbUser } from "../../api/userApis";
 
 const Register = () => {
     const { setUser, createUser: createAuthUser, createGoogleUser, profileUpdate, sendVerificationEmail, signOutUser } = useAuth();
@@ -21,6 +22,25 @@ const Register = () => {
     const togglePasswordVisibility = useCallback(() => {
         setShowPassword(prev => !prev);
     }, []);
+
+    // Function to insert user into database
+    const insertUserIntoDatabase = useCallback(async (user) => {
+        try {
+            await createDbUser(axiosSecure, {
+                name: user.displayName || '',
+                email: user.email,
+                photo: user.photoURL || '',
+                role: 'user'
+            });
+        } catch (dbError) {
+            console.error('Failed to insert user into database:', dbError);
+            // If user already exists, the API will return a 409 conflict
+            // We can ignore this error as it means the user is already in the database
+            if (dbError.response?.status !== 409) {
+                toast.error('Failed to save user information. Please contact support.');
+            }
+        }
+    }, [axiosSecure]);
 
     // Memoized registration handler
     const handleRegister = useCallback(async (e) => {
@@ -60,6 +80,9 @@ const Register = () => {
                 displayName: name,
                 photoURL: photo
             });
+            
+            // Insert user into database
+            await insertUserIntoDatabase(currentUser);
             
             // Send verification email
             try {
@@ -112,7 +135,7 @@ const Register = () => {
                 toast.error(`Registration failed: ${err.message}`);
             }
         };
-    }, [createAuthUser, profileUpdate, sendVerificationEmail, setUser, navigate]);
+    }, [createAuthUser, profileUpdate, sendVerificationEmail, setUser, navigate, insertUserIntoDatabase]);
 
     // Memoized Google registration handler
     const handleGoogleUser = useCallback(async () => {
@@ -120,6 +143,9 @@ const Register = () => {
         try {
             const userCredential = await createGoogleUser();
             const currentUser = userCredential.user;
+            
+            // Insert user into database
+            await insertUserIntoDatabase(currentUser);
             
             // Set user in context
             setUser(currentUser);
@@ -159,7 +185,7 @@ const Register = () => {
                 toast.error(`Registration failed: ${err.message}`);
             }
         };
-    }, [createGoogleUser, setUser, navigate]);
+    }, [createGoogleUser, setUser, navigate, insertUserIntoDatabase]);
 
     return (
         <>

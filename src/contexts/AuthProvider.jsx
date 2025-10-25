@@ -20,22 +20,40 @@ const AuthProvider = ({ children }) => {
     const googleProvider = useMemo(() => new GoogleAuthProvider(), []);
 
     //? Create User:
-    const createUser = useCallback((email, password) => {
+    const createUser = useCallback(async (email, password) => {
         startLoading();
-        return createUserWithEmailAndPassword(auth, email, password);
-    }, [startLoading]);
+        try {
+            // Create user in Firebase
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            return userCredential;
+        } finally {
+            stopLoading();
+        }
+    }, [startLoading, stopLoading]);
 
     //? Create User with Google:
-    const createGoogleUser = useCallback(() => {
+    const createGoogleUser = useCallback(async () => {
         startLoading();
-        return signInWithPopup(auth, googleProvider);
-    }, [googleProvider, startLoading]);
+        try {
+            // Sign in with Google
+            const userCredential = await signInWithPopup(auth, googleProvider);
+            return userCredential;
+        } finally {
+            stopLoading();
+        }
+    }, [googleProvider, startLoading, stopLoading]);
 
     //? SignIn User:
-    const signInUser = useCallback((email, password) => {
+    const signInUser = useCallback(async (email, password) => {
         startLoading();
-        return signInWithEmailAndPassword(auth, email, password);
-    }, [startLoading]);
+        try {
+            // Sign in user with Firebase
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            return userCredential;
+        } finally {
+            stopLoading();
+        }
+    }, [startLoading, stopLoading]);
 
     //? Reset Password:
     const forgotPassword = useCallback((email) => {

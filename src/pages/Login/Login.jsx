@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/UseAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { createUser as createDbUser } from "../../api/userApis";
 
 const Login = () => {
     const { setUser, signInUser, createGoogleUser, forgotPassword } = useAuth();
@@ -18,6 +19,25 @@ const Login = () => {
     const emailRef = useRef();
     const location = useLocation();
     const from = location?.state || '/';
+
+    // Function to insert user into database
+    const insertUserIntoDatabase = useCallback(async (user) => {
+        try {
+            await createDbUser(axiosSecure, {
+                name: user.displayName || '',
+                email: user.email,
+                photo: user.photoURL || '',
+                role: 'user'
+            });
+        } catch (dbError) {
+            console.error('Failed to insert user into database:', dbError);
+            // If user already exists, the API will return a 409 conflict
+            // We can ignore this error as it means the user is already in the database
+            if (dbError.response?.status !== 409) {
+                toast.error('Failed to save user information. Please contact support.');
+            }
+        }
+    }, [axiosSecure]);
 
     // Memoized login handler
     const handleLogin = useCallback(async (e) => {
@@ -32,6 +52,9 @@ const Login = () => {
         try {
             const userCredential = await signInUser(email, password);
             const currentUser = userCredential.user;
+
+            // Insert user into database if not exists
+            await insertUserIntoDatabase(currentUser);
 
             // Check if email is verified for email/password users
             if (!currentUser.emailVerified && currentUser.providerData[0]?.providerId === 'password') {
@@ -89,7 +112,7 @@ const Login = () => {
                 toast.error('Something went wrong. Please try again later!');
             }
         };
-    }, [signInUser, setUser, navigate, from]);
+    }, [signInUser, setUser, navigate, from, insertUserIntoDatabase]);
 
     // Memoized Google login handler
     const handleGoogleLogin = useCallback(async () => {
@@ -97,6 +120,9 @@ const Login = () => {
         try {
             const userCredential = await createGoogleUser();
             const currentUser = userCredential.user;
+            
+            // Insert user into database if not exists
+            await insertUserIntoDatabase(currentUser);
             
             // Success notification
             Swal.fire({
@@ -128,7 +154,7 @@ const Login = () => {
                 toast.error(`Login failed: ${err.message}`);
             }
         }
-    }, [createGoogleUser, setUser, navigate, from]);
+    }, [createGoogleUser, setUser, navigate, from, insertUserIntoDatabase]);
 
     // Memoized forgot password handler
     const handleForgotPassword = useCallback(async () => {

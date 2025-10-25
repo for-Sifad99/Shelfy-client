@@ -11,13 +11,14 @@ import { LuTableProperties, LuTableOfContents } from "react-icons/lu";
 import { MdTipsAndUpdates } from "react-icons/md";
 import { toast } from 'react-toastify';
 import useAuth from '../../hooks/UseAuth';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Loader from '../Shared/Loader';
 import Pagination from '../Shared/Pagination';
-import axios from 'axios';
+import { getBooksByUser } from '../../api/bookApis';
 
-
-const AllBooks = () => {
+const MyBooks = () => {
     const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
     const [books, setBooks] = useState([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
@@ -27,27 +28,26 @@ const AllBooks = () => {
     const [totalPages, setTotalPages] = useState(0);
     const itemsPerPage = 10;
 
-    // Fetch paginated books based on category & page
+    // Fetch paginated books based on user email
     useEffect(() => {
-        const fetchCategoryBooks = async () => {
+        const fetchUserBooks = async () => {
+            if (!user?.email) return;
+            
             try {
-                // Create axios instance with base URL
-                const axiosInstance = axios.create({
-                    baseURL: import.meta.env.VITE_server_url
-                });
-                
-                const res = await axiosInstance.get(`/api/allBooks?page=${currentPage}&limit=${itemsPerPage}`);
-                setBooks(res.data.books);
-                setTotalPages(res.data.totalPages);
+                setLoading(true);
+                const res = await getBooksByUser(axiosSecure, user.email, currentPage, itemsPerPage);
+                setBooks(res.books);
+                setTotalPages(res.totalPages);
             } catch (error) {
-                console.error("Error fetching all books:", error);
+                console.error("Error fetching user books:", error);
+                toast.error("Failed to fetch your books. Please try again.");
             } finally {
                 setLoading(false);
             };
         };
 
-        fetchCategoryBooks();
-    }, [currentPage]);
+        fetchUserBooks();
+    }, [user, axiosSecure, currentPage]);
 
     // filter books based on availability
     const filteredBooks = books.filter(book => {
@@ -65,21 +65,16 @@ const AllBooks = () => {
         setView(viewType);
     };
 
-    const handleDetailsClick = (bookId) => {
-        if (user) {
-            // user logged in → navigate to book details
-            navigate(`/book-details/${bookId}`);
-        } else {
-            // user not logged in → show toast
-            toast.warning('Please login first to view book details!');
-        }
+    const handleUpdateClick = (bookId) => {
+        // user logged in → navigate to update book page
+        navigate(`/update-book/${bookId}`);
     };
 
     return <>
         {/* Helmet */}
         <Helmet>
-            <title>All the Books - Shelfy</title>
-            <meta name="description" content="Scroll through ‘em all — find your next fav read on Shelfy!" />
+            <title>My Books - Shelfy</title>
+            <meta name="description" content="View and manage your added books on Shelfy!" />
         </Helmet>
 
 
@@ -95,12 +90,12 @@ const AllBooks = () => {
             {/* Title and Breadcrumb */}
             <div className="flex flex-col items-center justify-center text-center mx-auto sm:py-0 py-3">
                 <h1 className="text-[#012e4a] dark:text-[var(--color-light-primary)] font-semibold text-2xl md:text-3xl lg:text-4xl">
-                    Let's Read
+                    My Books
                 </h1>
                 <div className="flex items-center gap-1 text-[10px] sm:text-xs md:text-sm font-normal text-gray-600 dark:text-slate-400 sm:mt-1">
                     <Link to="/">Home</Link>
                     <IoIosArrowForward />
-                    <span className='text-orange-500 dark:text-orange-300'>All Books</span>
+                    <span className='text-orange-500 dark:text-orange-300'>My Books</span>
                 </div>
             </div>
 
@@ -150,12 +145,12 @@ const AllBooks = () => {
 
             {filteredBooks.length == 0 ?
                 <div className='flex flex-col justify-center items-center gap-2 sm:gap-3 md:mt-10 sm:mt-8 mt-6'>
-                    <p className='text-sm sm:text-2xl lg:text-3xl font-semibold text-orange-500 dark:text-orange-400'>There are no collect in this option!</p>
-                    <Link to='/'>
+                    <p className='text-sm sm:text-2xl lg:text-3xl font-semibold text-orange-500 dark:text-orange-400'>You haven't added any books yet!</p>
+                    <Link to='/add-Books'>
                         <button className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-white g bg-[var(--color-dark-secondary)]  rounded-full transition-all duration-300'>
                             <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                             <span className='relative z-10'>
-                                Back Home
+                                Add Books
                             </span>
                         </button>
                     </Link>
@@ -199,11 +194,11 @@ const AllBooks = () => {
                                                     {book.bookTitle}
                                                 </h1>
                                                 <button
-                                                    onClick={() => handleDetailsClick(book._id)}
+                                                    onClick={() => handleUpdateClick(book._id)}
                                                     className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] group-hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                     <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                                     <span className='relative z-10 flex gap-1 items-center'>
-                                                        <MdTipsAndUpdates /> Details
+                                                        <MdTipsAndUpdates /> Update
                                                     </span>
                                                 </button>
                                             </div>
@@ -249,11 +244,11 @@ const AllBooks = () => {
                                                     </td>
                                                     <td className="border-b-2 border-gray-200 dark:border-[#374151] px-4 py-2">
                                                         <button
-                                                            onClick={() => handleDetailsClick(book._id)}
+                                                            onClick={() => handleUpdateClick(book._id)}
                                                             className='relative overflow-hidden group text-xs font-semibold px-6 py-[8px] w-full flex justify-center text-[var(--color-dark-secondary)] hover:text-white group-hover:font-bold  bg-[#eeebfd] rounded-full transition-all duration-300'>
                                                             <span className="absolute left-0 top-0 h-full w-0 bg-[var(--color-primary-orange)] transition-all duration-500 group-hover:w-full z-0"></span>
                                                             <span className='relative z-10 flex gap-1 items-center'>
-                                                                <MdTipsAndUpdates /> Details
+                                                                <MdTipsAndUpdates /> Update
                                                             </span>
                                                         </button>
                                                     </td>
@@ -279,4 +274,4 @@ const AllBooks = () => {
     </>
 };
 
-export default AllBooks;
+export default MyBooks;
