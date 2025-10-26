@@ -17,6 +17,7 @@ const Profile = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [clickedOpen, setClickedOpen] = useState(false); // track click
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdminLoading, setIsAdminLoading] = useState(true);
     const modalRef = useRef(null);
     const profileRef = useRef(null);
 
@@ -26,6 +27,9 @@ const Profile = () => {
     // Check if user is admin
     useEffect(() => {
         const checkAdminStatus = async () => {
+            // Reset loading state
+            setIsAdminLoading(true);
+            
             // Check admin status if we have a user
             if (user?.email) {
                 console.log('Checking admin status for user:', user.email);
@@ -35,6 +39,7 @@ const Profile = () => {
                     console.log('User data retrieved:', userData);
                     const isAdminUser = userData.role === 'admin';
                     setIsAdmin(isAdminUser);
+                    setIsAdminLoading(false);
                     
                     // If user was admin but is now user, redirect to user dashboard
                     if (!isAdminUser && window.location.pathname.includes('/admin-dashboard')) {
@@ -58,10 +63,12 @@ const Profile = () => {
                         // For other errors, assume not admin for security
                         setIsAdmin(false);
                     }
+                    setIsAdminLoading(false);
                 }
             } else {
                 // No user, reset admin status
                 setIsAdmin(false);
+                setIsAdminLoading(false);
             }
         };
 
@@ -249,8 +256,16 @@ const Profile = () => {
                         <button
                             onClick={isAdmin ? handleAdminDashboard : handleUserDashboard}
                             className="text-sm w-full flex gap-2 items-center text-gray-500 dark:text-gray-300 py-1 pl-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"
+                            disabled={isAdminLoading}
                         >
-                            <MdDashboard /> {isAdmin ? 'Admin Dashboard' : 'User Dashboard'}
+                            <MdDashboard /> 
+                            {isAdminLoading ? (
+                                <span>Loading...</span>
+                            ) : isAdmin ? (
+                                'Admin Dashboard'
+                            ) : (
+                                'User Dashboard'
+                            )}
                         </button>
                     )}
                     
