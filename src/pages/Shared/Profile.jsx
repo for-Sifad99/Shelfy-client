@@ -26,8 +26,8 @@ const Profile = () => {
     // Check if user is admin
     useEffect(() => {
         const checkAdminStatus = async () => {
-            // Only check admin status if we have a user and they've been created in the database
-            if (user?.email && userCreationStatus.isCreated && userCreationStatus.userEmail === user.email) {
+            // Check admin status if we have a user
+            if (user?.email) {
                 console.log('Checking admin status for user:', user.email);
                 try {
                     // Always check the database for the current user's role
@@ -60,7 +60,7 @@ const Profile = () => {
                     }
                 }
             } else {
-                // No user or user not yet created in database, reset admin status
+                // No user, reset admin status
                 setIsAdmin(false);
             }
         };
@@ -68,7 +68,7 @@ const Profile = () => {
         checkAdminStatus();
         
         // Also check periodically to catch role changes
-        const interval = setInterval(checkAdminStatus, 2000); // Check every 2 seconds for faster updates
+        const interval = setInterval(checkAdminStatus, 5000); // Check every 5 seconds
         
         // Listen for role change events
         const handleRoleChange = () => {
@@ -81,7 +81,7 @@ const Profile = () => {
             clearInterval(interval);
             window.removeEventListener('roleChange', handleRoleChange);
         };
-    }, [user, axiosSecure, userCreationStatus, navigate]);
+    }, [user, axiosSecure, navigate]);
 
     const handleSignOut = async () => {
         Swal.fire({

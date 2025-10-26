@@ -7,11 +7,10 @@ const NotificationBell = () => {
     const [isOpen, setIsOpen] = useState(false);
     const notificationRef = useRef(null);
 
-    // For now, show notification bell for all users during testing
-    // In a real app, you would uncomment the line below to restrict to admin only
-    // if (!isAdmin) {
-    //     return null;
-    // }
+    // Only show notification bell for admin users
+    if (!isAdmin) {
+        return null;
+    }
 
     // Close notification dropdown when clicking outside
     useEffect(() => {
